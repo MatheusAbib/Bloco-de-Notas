@@ -1,0 +1,49 @@
+* Desinstalar karma
+npm uninstall karma karma-chrome-launcher karma-coverage karma-jasmine karma-jasmine-html-reporter @types/jasmine jasmine-core
+
+* Instalar Jest
+npm install --save-dev jest @types/jest @angular-builders/jest
+
+* Configurar o angular.json
+...
+        },
+        "test": {
+          "builder": "@angular-builders/jest:run",
+          "options": {
+            "configPath": "./jest.config.js"
+          }
+        }
+...
+
+* Atualização dos scripts de teste
+"test": "ng test",
+"test:watch": "ng test --watch"
+
+* Criar arquivo jest.config.js
+module.exports = {
+  preset: 'jest-preset-angular',
+  setupFilesAfterEnv: ['<rootDir>/setup-jest.ts'],
+};
+
+* Criar arquivo setup.test.ts
+import 'jest-preset-angular/setup-jest';
+
+* Atualizar o tsconfig.json
+{
+  "compileOnSave": false,
+  "typeRoots": ["@angular/core/rxjs-interop"],
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "types": ["jest", "node"],
+...
+
+* Atualizar o tsconfig.spec.json
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/spec",
+    "types": ["jest"]
+  },
+  "include": ["src/**/*.spec.ts", "src/**/*.d.ts"]
+}
