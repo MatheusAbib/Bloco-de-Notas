@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jersey+25&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+<link rel="icon" type="image" sizes="16x16" href="img/notepad.png">
+<link rel="stylesheet" href="css/styles.css">
+
+<title>Bloco de Notas</title>
+
+</head>
+<body>
+
+<div id="notepad">
+<div id="header">
+<div class="titulo">
+<h2>Bloco de Notas</h2>
+</div>
+<div class="opt">
+<label class="category" for="opt-1"></label>
+<label class="category" for="opt-2"></label>
+<label class="category" for="opt-4"></label>
+<ul class="tasks-wrapper"></ul>
+</div>
+</div>
+
+<div id="main-content">
+<div id="notes">
+<textarea id="note-content" placeholder="Escreva suas notas aqui..." oninput="saveNoteOnChange()"></textarea>
+
+<!-- Substitua a tabela atual por este div -->
+<div class="emoji-container">
+    <div class="emoji-controls">
+        <div class="emoji-search">
+            <input type="text" placeholder="Buscar emoji..." class="emoji-search-input" id="emoji-search">
+        </div>
+        <div class="emoji-categories">
+            <button class="emoji-category active" data-category="all">Todos</button>
+            <button class="emoji-category" data-category="faces">Carinhas</button>
+            <button class="emoji-category" data-category="symbols">Símbolos</button>
+            <button class="emoji-category" data-category="objects">Objetos</button>
+            <button class="emoji-category" data-category="nature">Natureza</button>
+        </div>
+    </div>
+    <div class="emoji-grid" id="emoji-grid">
+        <!-- Emojis serão adicionados dinamicamente via JavaScript -->
+    </div>
+</div>
+
+<div id="note-buttons">
+<button class="salvar-button" onclick="showNoteDialog()">Salvar</button>
+<button class="fechar-button" onclick="clearNote()">Fechar</button>
+</div>
+</div>
+
+<div id="note-list">
+<h2>Suas Notas</h2>
+<div id="saved-notes"></div>
+</div>
+</div>
+</div>
+
+<!-- Modal para salvar nota -->
+<div id="note-dialog">
+    <button class="close-modal" onclick="closeNoteDialog()"></button>
+    <h2>Salvar Nota</h2>
+    <input type="text" id="note-name" placeholder="Insira um nome para a sua nota...">
+    <button class="salvar-button" onclick="saveNote()">Salvar</button>
+</div>
+
+<!-- Modal para editar nome da nota -->
+<div id="edit-modal" class="modal">
+    <div class="modal-content">
+        <button class="close-modal" onclick="closeModal('edit-modal')"></button>
+        <h2 class="modal-title">Editar Nome da Nota</h2>
+        <input type="text" id="edit-note-name" class="modal-input" placeholder="Novo nome para a nota">
+        <div class="modal-buttons">
+            <button class="modal-button confirm" onclick="confirmEditNote()">Salvar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para confirmar exclusão -->
+<!-- Modal para confirmar exclusão -->
+<div id="delete-modal" class="modal">
+    <div class="modal-content">
+        <button class="close-modal" onclick="closeModal('delete-modal')"></button>
+        <h2 class="modal-title">Confirmar Exclusão</h2>
+        <p>Tem certeza que deseja excluir esta nota?</p>
+        <div class="modal-buttons">
+            <button class="modal-button-excluir confirm" onclick="confirmDeleteNote()">Sim</button>
+        </div>
+    </div>
+</div>
+
+<script src="js/script.js"></script>
+
+<!-- Modal de notificação -->
+<div id="notification" class="notification-modal"></div></body>
+</html>
+
