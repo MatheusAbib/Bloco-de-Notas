@@ -778,5 +778,25 @@ border-color: hsla(160, 49%, 33%, 0.822);
 display: none; /* Ocultado em mobile */
 }
 
+#note-content {
+    font-size: 18px; /* Tamanho padrão do texto */
+    line-height: 1.5;
+}
+
+/* Seleciona apenas os emojis dentro do textarea */
+#note-content span.emoji {
+    font-size: 300px; /* Tamanho maior para emojis */
+    vertical-align: middle;
+    line-height: 1;
+}
 
 
+#note-content {
+    font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
+}
+
+/* Ou ainda mais específico para emojis */
+#note-content {
+    font-feature-settings: "emoji";
+    font-variation-settings: "emoji";
+}
