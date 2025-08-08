@@ -738,8 +738,7 @@ background-color: #cc2e23e0;
 }
 
 
-#note-dialog {
-display: none;
+#note-dialog .modal-content {
 position: fixed;
 top: 50%;
 left: 50%;

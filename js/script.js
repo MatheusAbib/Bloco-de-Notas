@@ -88,7 +88,7 @@ function updateSaveButtonText() {
 const emojis = [
     { char: '☺', name: 'rosto sorridente', category: 'faces' },
     { char: 'ツ', name: 'rosto sorridente com olhos sorridentes', category: 'faces' },
-    { char: '♥', name: 'rosto apaixonado', category: 'faces' }, // Substituto simbólico
+    { char: '♥', name: 'rosto apaixonado', category: 'faces' }, 
     { char: '✰', name: 'estrela', category: 'symbols' },
     { char: '♡', name: 'coração', category: 'symbols' },
     { char: '♪', name: 'nota musical', category: 'symbols' },
@@ -102,17 +102,17 @@ const emojis = [
     { char: '√', name: 'raiz quadrada', category: 'symbols' },
     { char: '☀', name: 'sol', category: 'nature' },
     { char: '𝛑', name: 'pi', category: 'symbols' },
-    { char: '➳', name: 'flecha', category: 'symbols' }, // substituto para 📝
-    { char: '⚑', name: 'marcador', category: 'objects' },       // substituto para 🔖
+    { char: '➳', name: 'flecha', category: 'symbols' }, 
+    { char: '⚑', name: 'marcador', category: 'objects' },      
     { char: 'ᵔᴥᵔ', name: 'rosto urso', category: 'faces' },
     { char: '☠', name: 'caveira', category: 'symbols' },
     { char: '†', name: 'cruz', category: 'objects' },
-    { char: '🗓', name: 'calendário', category: 'objects' },     // versão mais unicode-like
+    { char: '🗓', name: 'calendário', category: 'objects' },     
     { char: '☮', name: 'paz', category: 'symbols' },
     { char: '𓆏', name: 'ra', category: 'nature' },
-    { char: '❀', name: 'planta', category: 'nature' },          // substituto para 🌱
-    { char: '✿', name: 'flor', category: 'nature' },            // substituto para 🌸
-    { char: '☀︎', name: 'arco-íris', category: 'nature' }       // substituto simbólico
+    { char: '❀', name: 'planta', category: 'nature' },          
+    { char: '✿', name: 'flor', category: 'nature' },            
+    { char: '☀︎', name: 'arco-íris', category: 'nature' }      
 ];
 
 // Função para renderizar emojis

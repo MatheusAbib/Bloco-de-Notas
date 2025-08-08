@@ -322,11 +322,13 @@
 </div>
 
 <!-- Modal para salvar nota -->
-<div id="note-dialog">
-    <button class="close-modal" onclick="closeNoteDialog()"></button>
-    <h2>Salvar Nota</h2>
-    <input type="text" id="note-name" placeholder="Insira um nome para a sua nota...">
-    <button class="salvar-button" onclick="saveNote()">Salvar</button>
+<div id="note-dialog" class="modal">
+    <div class="modal-content">
+        <button class="close-modal" onclick="closeNoteDialog()"></button>
+        <h2>Salvar Nota</h2>
+        <input type="text" id="note-name" placeholder="Insira um nome para a sua nota...">
+        <button class="salvar-button" onclick="saveNote()">Salvar</button>
+    </div>
 </div>
 
 <!-- Modal para editar nome da nota -->
