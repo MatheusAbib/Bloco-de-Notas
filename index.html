@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jersey+25&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
 <link rel="icon" type="image" sizes="16x16" href="img/notepad.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="stylesheet" href="css/styles.css">
 
 <title>Bloco de Notas</title>
@@ -122,7 +123,7 @@
         }
 
         .emoji-container {
-            max-height: 260px; /* Altura máxima menor em telas grandes */
+            max-height: 270px; /* Altura máxima menor em telas grandes */
         }
     }
 
@@ -155,7 +156,7 @@
     @media (min-width: 1024px) {
 
         .emoji-container {
-            height: 258px; /* Container de emojis mais compacto */
+            height: 280px; /* Container de emojis mais compacto */
         }  
 
         #notepad {
@@ -197,7 +198,7 @@
         }
         
         textarea {
-            height: 35vh; /* Altura dinâmica baseada no viewport */
+            height: 37vh; /* Altura dinâmica baseada no viewport */
             min-height: 260px; /* Altura mínima garantida */
         }
         
@@ -309,8 +310,14 @@
 </div>
 
 <div id="note-buttons">
-<button class="salvar-button" onclick="showNoteDialog()">Salvar</button>
-<button class="fechar-button" onclick="clearNote()">Fechar</button>
+<button class="salvar-button" onclick="showNoteDialog()">
+  <i class="fa-solid fa-floppy-disk"></i>
+  <span>Salvar</span>
+</button>
+<button class="fechar-button" onclick="clearNote()">
+  <i class="fa-solid fa-xmark"></i>
+  <span>Fechar</span>
+</button>
 </div>
 </div>
 
@@ -323,27 +330,50 @@
 
 <!-- Modal para salvar nota -->
 <div id="note-dialog" class="modal">
-    <div class="modal-content">
-        <button class="close-modal" onclick="closeNoteDialog()"></button>
-        <h2>Salvar Nota</h2>
-        <input type="text" id="note-name" placeholder="Insira um nome para a sua nota...">
-        <button class="salvar-button" onclick="saveNote()">Salvar</button>
-    </div>
+  <div class="modal-content">
+    <button class="close-modal" onclick="closeNoteDialog()" title="Fechar">
+    </button>
+
+    <h2>Salvar Nota</h2>
+
+    <input
+      type="text"
+      id="note-name"
+      placeholder="Insira um nome para a sua nota..."
+    >
+
+    <button class="salvar-button" onclick="saveNote()">
+      <i class="fa-solid fa-floppy-disk"></i>
+      <span>Salvar</span>
+    </button>
+  </div>
 </div>
 
-<!-- Modal para editar nome da nota -->
+
 <div id="edit-modal" class="modal">
-    <div class="modal-content">
-        <button class="close-modal" onclick="closeModal('edit-modal')"></button>
-        <h2 class="modal-title">Editar Nome da Nota</h2>
-        <input type="text" id="edit-note-name" class="modal-input" placeholder="Novo nome para a nota">
-        <div class="modal-buttons">
-            <button class="modal-button confirm" onclick="confirmEditNote()">Salvar</button>
-        </div>
+  <div class="modal-content">
+    <button class="close-modal" onclick="closeModal('edit-modal')" title="Fechar">
+    </button>
+
+    <h2 class="modal-title">Editar Nome da Nota</h2>
+
+    <input
+      type="text"
+      id="edit-note-name"
+      class="modal-input"
+      placeholder="Novo nome para a nota"
+    >
+
+    <div class="modal-buttons">
+      <button class="modal-button confirm" onclick="confirmEditNote()">
+        <i class="fa-solid fa-pen-to-square"></i>
+        <span>Salvar</span>
+      </button>
     </div>
+  </div>
 </div>
 
-<!-- Modal para confirmar exclusão -->
+
 <!-- Modal para confirmar exclusão -->
 <div id="delete-modal" class="modal">
     <div class="modal-content">

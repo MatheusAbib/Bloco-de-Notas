@@ -216,7 +216,7 @@ text-align: left;
 
 .titulo h2 {
     color: white;
-    font-size: 1.9rem;
+    font-size: 2rem;
     margin: 0;
     display: flex;
     align-items: center;
@@ -294,12 +294,12 @@ display: flex;
 justify-content: space-between;
 gap: 10px;
 padding: 0 5px;
-margin-top: 10px;
+margin-top: 15px;
 }
 
 .emoji-container {
     width: 100%;
-    margin: 20px 0;
+    margin: 10px 0;
     padding: 15px;
     background: white;
     border-radius: 12px;
@@ -420,13 +420,13 @@ margin-top: 10px;
     border: none;
     margin-top: 8px;
     border-radius: 4px;
-    padding: 5px 12px;
-    font-size: 0.8rem;
+    padding: 6px 12px;
+    font-size: 0.82rem;
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 10px;
 }
 
 .salvar-button{
@@ -434,13 +434,13 @@ margin-top: 10px;
     color: white;
     border: none;
     border-radius: 4px;
-    padding: 8px 12px;
-    font-size: 0.8rem;
+    padding: 10px 18px;
+    font-size: 1rem;
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 10px;
 }
 
 .salvar-button:hover{
@@ -449,22 +449,18 @@ margin-top: 10px;
     
 }
 
-.salvar-button:first-child::before {
-    content: "💾";
-}
-
 .fechar-button{
     background-color: hsl(160, 49%, 33%);
     color: white;
     border: none;
     border-radius: 4px;
-    padding: 8px 12px;
-    font-size: 0.8rem;
+    padding: 10px 18px;
+    font-size: 1rem;
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 10px;
 }
 
 .fechar-button:hover{
@@ -474,11 +470,6 @@ margin-top: 10px;
 
 .note-button::before {
     font-size: 14px;
-}
-
-
-.note-button:last-child::before {
-    content: "✏️";
 }
 
 
@@ -554,7 +545,7 @@ align-items: center;
 
 .modal-content {
     background-color: #ffffff;
-    padding: 25px;
+    padding: 30px;
     border-radius: 8px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     width: 90%;
@@ -600,22 +591,22 @@ gap: 10px;
 
 .modal-button {
 flex: 1;
-padding: 5px;
-border-radius: 10px;
+padding: 6px;
+border-radius: 4px;
 cursor: pointer;
-font-size: 0.9rem;
+font-size: 1rem;
 transition: background-color 0.3s ease;
 border: none;
 }
 
 .modal-button-excluir{
 flex: 1;
-padding: 5px;
+padding: 6px;
 background-color: hsl(160, 49%, 33%);
 color: white;
-border-radius: 10px;
+border-radius: 4px;
 cursor: pointer;
-font-size: 0.9rem;
+font-size: 1rem;
 transition: background-color 0.3s ease;
 border: none;
 margin-top: 19px;
@@ -779,11 +770,10 @@ display: none; /* Ocultado em mobile */
 }
 
 #note-content {
-    font-size: 18px; /* Tamanho padrão do texto */
+    font-size: 15px; 
     line-height: 1.5;
 }
 
-/* Seleciona apenas os emojis dentro do textarea */
 #note-content span.emoji {
     font-size: 300px; /* Tamanho maior para emojis */
     vertical-align: middle;

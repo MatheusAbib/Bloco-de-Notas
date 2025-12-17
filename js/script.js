@@ -261,8 +261,12 @@ function updateNoteList() {
 
         var editButton = document.createElement('button');
         editButton.classList.add('note-button');
-        editButton.textContent = 'Editar';
+        editButton.innerHTML = `
+        <i class="fa-solid fa-pen-to-square"></i>
+        <span>Editar nome</span>
+        `;
         editButton.setAttribute('onclick', 'editNoteName(' + index + ', event)');
+
 
         var deleteButton = document.createElement('button');
         deleteButton.classList.add('delete-button');
