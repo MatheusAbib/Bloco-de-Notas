@@ -514,14 +514,14 @@ text-align: center;
 .note-card h3 {
     margin-top: 0;
     margin-bottom: 6px;
-    font-size: 1rem;
+    font-size: 1.18rem;
     color: hsl(160, 49%, 33%);
     font-weight: 500;
 }
 
 .note-card p {
 margin: 0;
-font-size: 0.8rem;
+font-size: 0.83rem;
 color: #0500008d;
 }
 
