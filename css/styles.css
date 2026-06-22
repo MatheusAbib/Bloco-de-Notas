@@ -14,12 +14,7 @@ height: 100%;
 }
 
 body {
-margin: 0;
-padding: 0;
 font-family: 'Roboto Slab', serif;
-min-height: 100vh;
-display: flex;
-flex-direction: column;
 }
 
 body::before {
@@ -43,7 +38,7 @@ body::before {
     z-index: -1;
 }
 
-/* Estilo para o modal de notificação */
+
 .notification-modal {
     position: fixed;
     top: 20px;
@@ -228,14 +223,14 @@ text-align: left;
 }
 
 .opt {
-display: none; /* Escondido por padrão em mobile */
+display: none; 
 }
 
 #main-content {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    min-height: 0; /* Importante para o flexbox */
+    min-height: 0; 
 }
 
 #notes {
@@ -306,7 +301,6 @@ margin-top: 15px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     position: relative;
     overflow: hidden;
-    /* Garante que não expanda indefinidamente */
     max-height: 300px;
     overflow-y: auto;
 }
@@ -374,8 +368,7 @@ margin-top: 15px;
     box-shadow: 0 0 0 2px rgba(25, 167, 119, 0.2);
 }
 
-.emoji-search::before {
-    content: "🔍";
+.fa-search {
     position: absolute;
     left: 12px;
     top: 50%;
@@ -483,7 +476,7 @@ margin-top: 15px;
     background-color: #f5f5f5;
     order: 1;
     height: 100%;
-    min-height: 300px; /* Altura mínima */
+    min-height: 300px; 
     overflow-y: auto;
     border-right: 1px solid #e0e0e0;
     display: flex;
@@ -526,10 +519,9 @@ color: #0500008d;
 }
 
 .folder-icon {
-display: none; /* Ocultado em mobile */
+display: none; 
 }
 
-/* Modal styles */
 .modal {
 display: none;
 position: fixed;
@@ -658,8 +650,6 @@ background-color: hsla(159, 77%, 17%, 0.877);
     content: "✕ Cancelar";
 }
 
-
-/* Ajustes para o botão de excluir nas notas */
 .delete-button {
     width: 22px;
     height: 22px;
@@ -682,7 +672,7 @@ background-color: #cc2e23e0;
     transform: rotate(90deg);
     background-color: #cc2e23e0;
 }
-/* Estilo padronizado para todos os botões de fechar */
+
 .close-button, 
 .close-modal {
     position: absolute;
@@ -718,7 +708,6 @@ background-color: #cc2e23e0;
     transform: rotate(90deg);
 }
 
-/* Estilo específico para o botão de fechar do modal de salvar nota */
 .close-button {
     background-color: hsla(0, 100%, 51%, 0.1);
     color: #ff3a30ce;
@@ -766,16 +755,16 @@ border-color: hsla(160, 49%, 33%, 0.822);
 }
 
 .content-categories {
-display: none; /* Ocultado em mobile */
+display: none; 
 }
 
 #note-content {
-    font-size: 15px; 
+    font-size: 20px; 
     line-height: 1.5;
 }
 
 #note-content span.emoji {
-    font-size: 300px; /* Tamanho maior para emojis */
+    font-size: 300px;
     vertical-align: middle;
     line-height: 1;
 }
@@ -785,7 +774,6 @@ display: none; /* Ocultado em mobile */
     font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
 }
 
-/* Ou ainda mais específico para emojis */
 #note-content {
     font-feature-settings: "emoji";
     font-variation-settings: "emoji";

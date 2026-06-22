@@ -14,7 +14,6 @@
 
 <style>
 
-    /* Medias e barras de rolagem */
     @media (max-width: 600px) {
     .notification-modal {
         padding: 15px 20px;
@@ -32,7 +31,7 @@
 @media (max-width: 412px) {
 
       .emoji-container {
-        height: 200px; /* Container de emojis mais compacto */
+        height: 200px; 
     }  
 
     .notification-modal {
@@ -42,19 +41,18 @@
 }
 
 
-/* Para dispositivos móveis (telas menores que 768px) */
 @media (max-width: 767px) {
     #note-list {
-        max-height: calc(3 * 100px); /* Altura para 3 notas (ajuste conforme necessário) */
+        max-height: calc(3 * 100px); 
         overflow-y: auto;
     }
     
     .note-card {
-        min-height: 80px; /* Altura mínima de cada cartão de nota */
+        min-height: 80px; 
     }
     #main-content {
         display: flex;
-        flex-direction: column-reverse; /* Notas em cima, editor embaixo */
+        flex-direction: column-reverse; 
     }
     
     #notes {
@@ -63,16 +61,15 @@
     }
     
     #note-list {
-        flex: 0 0 auto; /* Não cresce, apenas ocupa espaço necessário */
+        flex: 0 0 auto; 
     }
     
     textarea {
-        height: 300px; /* Altura fixa para o editor em mobile */
+        height: 300px; 
     }
 }
 
 
-/* Estilos para tablets */
     @media (min-width: 768px) {
     #notepad {
         margin: 40px auto;
@@ -290,11 +287,10 @@
 <div id="notes">
 <textarea id="note-content" placeholder="Escreva suas notas aqui..." oninput="saveNoteOnChange()"></textarea>
 
-<!-- Substitua a tabela atual por este div -->
 <div class="emoji-container">
     <div class="emoji-controls">
         <div class="emoji-search">
-            <input type="text" placeholder="Buscar emoji..." class="emoji-search-input" id="emoji-search">
+            <i class="fa fa-search"></i><input type="text" placeholder="Buscar emoji..." class="emoji-search-input" id="emoji-search">
         </div>
         <div class="emoji-categories">
             <button class="emoji-category active" data-category="all">Todos</button>
@@ -374,7 +370,6 @@
 </div>
 
 
-<!-- Modal para confirmar exclusão -->
 <div id="delete-modal" class="modal">
     <div class="modal-content">
         <button class="close-modal" onclick="closeModal('delete-modal')"></button>

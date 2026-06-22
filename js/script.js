@@ -1,4 +1,3 @@
-// Variáveis globais para armazenar o índice da nota sendo editada/excluída
 let currentNoteIndex = null;
 
 window.onload = function() {
@@ -9,11 +8,9 @@ window.onload = function() {
 function showNoteDialog() {
     var editNoteIndex = localStorage.getItem('editNoteIndex');
     
-    // Se já houver uma nota sendo editada, apenas salve as alterações
     if (editNoteIndex !== null) {
         saveNote();
     } else {
-        // Caso contrário, mostre o diálogo para criar nova nota
         var dialog = document.getElementById('note-dialog');
         dialog.style.display = 'block';
         document.getElementById('note-name').focus();
@@ -31,7 +28,6 @@ function saveNote() {
     var noteContent = document.getElementById("note-content").value;
     
     if (editNoteIndex !== null) {
-        // Editar nota existente
         try {
             var savedNotes = JSON.parse(localStorage.getItem('savedNotes')) || [];
             savedNotes[editNoteIndex].content = noteContent;
@@ -44,7 +40,6 @@ function saveNote() {
             showNotification("Erro ao atualizar nota!", true);
         }
     } else {
-        // Criar nova nota
         var noteName = document.getElementById("note-name").value.trim();
         
         if (!noteName) {
@@ -84,7 +79,6 @@ function updateSaveButtonText() {
     }
 }
 
-// Lista de emojis organizados por categoria
 const emojis = [
     { char: '☺', name: 'rosto sorridente', category: 'faces' },
     { char: 'ツ', name: 'rosto sorridente com olhos sorridentes', category: 'faces' },
@@ -115,7 +109,6 @@ const emojis = [
     { char: '☀︎', name: 'arco-íris', category: 'nature' }      
 ];
 
-// Função para renderizar emojis
 function renderEmojis(filter = '', category = 'all') {
     const emojiGrid = document.getElementById('emoji-grid');
     emojiGrid.innerHTML = '';
@@ -137,14 +130,12 @@ function renderEmojis(filter = '', category = 'all') {
     });
 }
 
-// Evento de busca
 document.getElementById('emoji-search').addEventListener('input', (e) => {
     const searchTerm = e.target.value;
     const activeCategory = document.querySelector('.emoji-category.active').dataset.category;
     renderEmojis(searchTerm, activeCategory);
 });
 
-// Eventos de categoria
 document.querySelectorAll('.emoji-category').forEach(button => {
     button.addEventListener('click', () => {
         document.querySelectorAll('.emoji-category').forEach(btn => {
@@ -156,11 +147,11 @@ document.querySelectorAll('.emoji-category').forEach(button => {
     });
 });
 
-// Renderizar emojis inicialmente
+
 renderEmojis();
 
 function editNoteName(index, event) {
-event.stopPropagation(); // Impede que o clique abra a nota
+event.stopPropagation();
 currentNoteIndex = index;
 
 var savedNotes = JSON.parse(localStorage.getItem('savedNotes')) || [];
@@ -187,13 +178,16 @@ function confirmEditNote() {
 
 
 }
-function openNote(index) {
-var savedNotes = JSON.parse(localStorage.getItem('savedNotes')) || [];
-var noteContent = document.getElementById("note-content");
-noteContent.value = savedNotes[index].content;
-localStorage.setItem('editNoteIndex', index);
 
-updateSaveButtonText();
+function openNote(index, event) {
+    if (event) {
+        event.stopPropagation(); 
+    }
+    var savedNotes = JSON.parse(localStorage.getItem('savedNotes')) || [];
+    var noteContent = document.getElementById("note-content");
+    noteContent.value = savedNotes[index].content;
+    localStorage.setItem('editNoteIndex', index);
+    updateSaveButtonText();
 }
 
 function clearNote() {
@@ -206,7 +200,7 @@ updateSaveButtonText();
 }
 
 function deleteNote(index, event) {
-event.stopPropagation(); // Impede que o clique abra a nota
+event.stopPropagation(); 
 currentNoteIndex = index;
 openModal('delete-modal');
 }
@@ -216,7 +210,6 @@ function confirmDeleteNote() {
     savedNotes.splice(currentNoteIndex, 1);
     localStorage.setItem('savedNotes', JSON.stringify(savedNotes));
 
-    // Se a nota excluída era a que estava sendo editada, limpe o editor
     var editNoteIndex = localStorage.getItem('editNoteIndex');
     if (editNoteIndex && editNoteIndex == currentNoteIndex) {
         clearNote();
@@ -259,6 +252,14 @@ function updateNoteList() {
         var date = document.createElement('p');
         date.textContent = 'Último acesso: ' + new Date(note.lastAccess).toLocaleDateString();
 
+        var openButton = document.createElement('button');
+        openButton.classList.add('note-button');
+        openButton.innerHTML = `
+        <i class="fa-solid fa-folder-open"></i>
+        <span>Abrir</span>
+        `;
+        openButton.setAttribute('onclick', 'openNote(' + index + ', event)');
+
         var editButton = document.createElement('button');
         editButton.classList.add('note-button');
         editButton.innerHTML = `
@@ -267,7 +268,6 @@ function updateNoteList() {
         `;
         editButton.setAttribute('onclick', 'editNoteName(' + index + ', event)');
 
-
         var deleteButton = document.createElement('button');
         deleteButton.classList.add('delete-button');
         deleteButton.setAttribute('onclick', 'deleteNote(' + index + ', event)');
@@ -275,7 +275,9 @@ function updateNoteList() {
 
         noteContent.appendChild(title);
         noteContent.appendChild(date);
+        noteContent.appendChild(openButton); 
         noteContent.appendChild(editButton);
+        noteContent.appendChild(deleteButton);
 
         noteCard.appendChild(folderIcon);
         noteCard.appendChild(noteContent);
@@ -305,7 +307,6 @@ function saveEmoji(emoji) {
     
     noteContent.value = textBefore + emoji + textAfter;
     
-    // Posiciona o cursor após o emoji inserido
     noteContent.selectionStart = cursorPos + emoji.length;
     noteContent.selectionEnd = cursorPos + emoji.length;
     noteContent.focus();
@@ -313,7 +314,6 @@ function saveEmoji(emoji) {
     saveNoteOnChange();
 }
 
-// Funções para controlar os modais
 function openModal(modalId) {
 document.getElementById(modalId).style.display = 'flex';
 }
@@ -326,23 +326,19 @@ currentNoteIndex = null;
 function showNotification(message, type = 'success') {
     const notification = document.getElementById('notification');
     
-    // Criar elemento de progresso
     const progress = document.createElement('div');
     progress.className = 'notification-progress';
     
-    // Configurar notificação
     notification.innerHTML = '';
     notification.appendChild(progress);
     notification.insertAdjacentHTML('beforeend', message);
     notification.className = 'notification-modal';
     notification.classList.add(type);
     
-    // Mostrar notificação
     setTimeout(() => {
         notification.classList.add('show');
     }, 10);
     
-    // Esconder após 3 segundos
     setTimeout(() => {
         notification.classList.remove('show');
         setTimeout(() => {
