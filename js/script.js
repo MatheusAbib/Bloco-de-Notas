@@ -22,6 +22,12 @@ let saveTimeout = null;
 let savedRange = null;
 let savedSelection = null;
 
+let fontColor = '#1a2a2a';
+let isShadowActive = false;
+
+let multiSelectMode = false;
+let selectedNotes = new Set();
+
 window.onload = function() {
   updateNoteList();
   updateSaveButtonText();
@@ -56,6 +62,168 @@ function restoreSelection() {
       sel.addRange(savedRange);
     }
   }
+}
+
+function toggleMultiSelect() {
+  multiSelectMode = !multiSelectMode;
+  var btn = document.querySelector('.multi-select-toggle');
+  var actions = document.getElementById('multi-select-actions');
+  
+  btn.classList.toggle('active', multiSelectMode);
+  actions.style.display = multiSelectMode ? 'flex' : 'none';
+  
+  if (multiSelectMode) {
+    updateBatchButtons();
+  }
+  
+  if (!multiSelectMode) {
+    selectedNotes.clear();
+    updateSelectedCount();
+  }
+  
+  updateNoteList();
+}
+
+function toggleNoteSelection(index, event) {
+  if (!multiSelectMode) return;
+  
+  event.stopPropagation();
+  event.preventDefault();
+  
+  if (selectedNotes.has(index)) {
+    selectedNotes.delete(index);
+  } else {
+    selectedNotes.add(index);
+  }
+  
+  updateSelectedCount();
+  updateNoteList();
+}
+
+function updateSelectedCount() {
+  var count = document.getElementById('selected-count');
+  count.textContent = selectedNotes.size;
+}
+
+function batchPin() {
+  if (selectedNotes.size === 0) {
+    showNotification('Nenhuma nota selecionada.', 'error');
+    return;
+  }
+  
+  var savedNotes = JSON.parse(localStorage.getItem('savedNotes')) || [];
+  var pinnedCount = savedNotes.filter(function(n) { return n.pinned === true; }).length;
+  var toPin = selectedNotes.size;
+  
+  if (pinnedCount + toPin > 5) {
+    showNotification('Limite de 5 notas fixadas!', 'error');
+    return;
+  }
+  
+  selectedNotes.forEach(function(index) {
+    if (savedNotes[index]) {
+      savedNotes[index].pinned = true;
+    }
+  });
+  
+  localStorage.setItem('savedNotes', JSON.stringify(savedNotes));
+  selectedNotes.clear();
+  updateSelectedCount();
+  updateNoteList();
+  loadFilterTags();
+  applyFilters();
+  showNotification(toPin + ' nota(s) fixada(s)!', 'success');
+}
+
+function batchArchive() {
+  if (selectedNotes.size === 0) {
+    showNotification('Nenhuma nota selecionada.', 'error');
+    return;
+  }
+  
+  var savedNotes = JSON.parse(localStorage.getItem('savedNotes')) || [];
+  var count = selectedNotes.size;
+  
+  selectedNotes.forEach(function(index) {
+    if (savedNotes[index]) {
+      savedNotes[index].archived = true;
+    }
+  });
+  
+  localStorage.setItem('savedNotes', JSON.stringify(savedNotes));
+  selectedNotes.clear();
+  updateSelectedCount();
+  updateNoteList();
+  loadFilterTags();
+  applyFilters();
+  showNotification(count + ' nota(s) arquivada(s)!', 'success');
+}
+
+function batchUnarchive() {
+  if (selectedNotes.size === 0) {
+    showNotification('Nenhuma nota selecionada.', 'error');
+    return;
+  }
+  
+  var savedNotes = JSON.parse(localStorage.getItem('savedNotes')) || [];
+  var count = selectedNotes.size;
+  
+  selectedNotes.forEach(function(index) {
+    if (savedNotes[index]) {
+      savedNotes[index].archived = false;
+    }
+  });
+  
+  localStorage.setItem('savedNotes', JSON.stringify(savedNotes));
+  selectedNotes.clear();
+  updateSelectedCount();
+  updateNoteList();
+  loadFilterTags();
+  applyFilters();
+  showNotification(count + ' nota(s) desarquivada(s)!', 'success');
+}
+
+function batchDelete() {
+  if (selectedNotes.size === 0) {
+    showNotification('Nenhuma nota selecionada.', 'error');
+    return;
+  }
+  
+  var savedNotes = JSON.parse(localStorage.getItem('savedNotes')) || [];
+  var names = [];
+  selectedNotes.forEach(function(index) {
+    if (savedNotes[index]) {
+      names.push(savedNotes[index].name);
+    }
+  });
+  
+  var message = 'Tem certeza que deseja excluir ' + selectedNotes.size + ' nota(s)?';
+  document.getElementById('batch-delete-message').textContent = message;
+  
+  var list = document.getElementById('batch-delete-list');
+  list.innerHTML = names.map(function(name) {
+    return '<div style="padding:2px 0;">• ' + name + '</div>';
+  }).join('');
+  
+  document.getElementById('batch-delete-modal').style.display = 'flex';
+}
+
+function confirmBatchDelete() {
+  var savedNotes = JSON.parse(localStorage.getItem('savedNotes')) || [];
+  var indices = Array.from(selectedNotes).sort(function(a, b) { return b - a; });
+  
+  indices.forEach(function(index) {
+    savedNotes.splice(index, 1);
+  });
+  
+  localStorage.setItem('savedNotes', JSON.stringify(savedNotes));
+  selectedNotes.clear();
+  updateSelectedCount();
+  document.getElementById('batch-delete-modal').style.display = 'none';
+  updateNoteList();
+  loadFilterTags();
+  applyFilters();
+  showNotification('Notas excluídas com sucesso!', 'error');
 }
 
 function updateSaveIndicator(status, message) {
@@ -647,11 +815,40 @@ function updateNoteList() {
       card.style.backgroundColor = 'rgba(' + r + ', ' + g + ', ' + b + ', 0.08)';
     }
     
-    card.setAttribute('onclick', 'openNote(' + originalIndex + ', event)');
+    var checkboxOverlay = document.createElement('div');
+    checkboxOverlay.className = 'checkbox-overlay';
+    if (multiSelectMode) {
+      checkboxOverlay.classList.add('show');
+    }
+    if (selectedNotes.has(originalIndex)) {
+      checkboxOverlay.classList.add('checked');
+      checkboxOverlay.innerHTML = '<i class="fas fa-check"></i>';
+    } else {
+      checkboxOverlay.innerHTML = '';
+    }
+    card.appendChild(checkboxOverlay);
+    
+    if (multiSelectMode) {
+      card.classList.add('selectable');
+      card.onclick = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleNoteSelection(originalIndex, e);
+      };
+      card.removeAttribute('onclick');
+    } else {
+      card.onclick = function(e) {
+        openNote(originalIndex, e);
+      };
+      card.removeAttribute('onclick');
+    }
     
     if (note.pinned) {
       var pinIcon = document.createElement('i');
       pinIcon.className = 'pin-icon pinned fa-solid fa-thumbtack';
+      if (note.color) {
+        pinIcon.style.color = note.color;
+      }
       card.appendChild(pinIcon);
     }
     
@@ -687,7 +884,7 @@ function updateNoteList() {
     var actions = document.createElement('div');
     actions.className = 'note-card-actions';
     
-    if (!isActive) {
+    if (!isActive && !multiSelectMode) {
       var openBtn = document.createElement('button');
       openBtn.innerHTML = '<i class="fas fa-folder-open"></i>';
       openBtn.setAttribute('onclick', 'openNote(' + originalIndex + ', event)');
@@ -712,9 +909,15 @@ function updateNoteList() {
     deleteBtn.setAttribute('title', 'Excluir');
     
     var archiveBtn = document.createElement('button');
-    archiveBtn.innerHTML = note.archived ? '<i class="fas fa-undo"></i>' : '<i class="fas fa-archive"></i>';
-    archiveBtn.setAttribute('onclick', 'toggleArchiveNote(' + originalIndex + ', event)');
-    archiveBtn.setAttribute('title', note.archived ? 'Desarquivar' : 'Arquivar');
+    if (currentTab === 'archived') {
+      archiveBtn.innerHTML = '<i class="fas fa-undo"></i>';
+      archiveBtn.setAttribute('onclick', 'toggleArchiveNote(' + originalIndex + ', event)');
+      archiveBtn.setAttribute('title', 'Desarquivar');
+    } else {
+      archiveBtn.innerHTML = '<i class="fas fa-archive"></i>';
+      archiveBtn.setAttribute('onclick', 'toggleArchiveNote(' + originalIndex + ', event)');
+      archiveBtn.setAttribute('title', 'Arquivar');
+    }
     
     actions.appendChild(pinBtn);
     actions.appendChild(editBtn);
@@ -730,6 +933,19 @@ function updateNoteList() {
   
   loadFilterTags();
   applyFilters();
+}
+
+function updateBatchButtons() {
+  var archiveBtn = document.getElementById('batch-archive-btn');
+  var unarchiveBtn = document.getElementById('batch-unarchive-btn');
+  
+  if (currentTab === 'archived') {
+    archiveBtn.style.display = 'none';
+    unarchiveBtn.style.display = 'inline-flex';
+  } else {
+    archiveBtn.style.display = 'inline-flex';
+    unarchiveBtn.style.display = 'none';
+  }
 }
 
 function createNewNote() {
@@ -1102,45 +1318,166 @@ function updateToolbarState() {
     if (cmd && cmd.includes('insertChecklist')) {
       btn.classList.toggle('active', isChecklistActive);
     }
+    if (cmd && cmd.includes('toggleShadow')) {
+      btn.classList.toggle('active', isShadowActive);
+    }
   });
   
-if (editIndex !== null) {
-  var sel = window.getSelection();
-  if (sel.rangeCount > 0 && !sel.isCollapsed) {
-    var text = sel.toString();
+  if (editIndex !== null) {
+    var sel = window.getSelection();
+    var hasHighlight = false;
     
-    var uppercaseBtn = document.getElementById('transform-uppercase');
-    var lowercaseBtn = document.getElementById('transform-lowercase');
-    var capitalizeBtn = document.getElementById('transform-capitalize');
-    
-    var isUppercase = text === text.toUpperCase() && text.length > 0;
-    var isLowercase = text === text.toLowerCase() && text.length > 0;
-    
-    var isMixedCase = !isUppercase && !isLowercase && text.length > 0;
-    
-    var words = text.split(' ');
-    var isCapitalized = words.every(function(word) {
-      return word.length > 0 && word[0] === word[0].toUpperCase();
-    });
-    
-    if (uppercaseBtn) {
-      uppercaseBtn.classList.toggle('active', isUppercase);
+    if (sel.rangeCount > 0 && !sel.isCollapsed) {
+      var range = sel.getRangeAt(0);
+      
+      var tempDiv = document.createElement('div');
+      tempDiv.appendChild(range.cloneContents());
+      var highlightSpans = tempDiv.querySelectorAll('.highlight');
+      if (highlightSpans.length > 0) {
+        hasHighlight = true;
+      }
     }
-    if (lowercaseBtn) {
-      lowercaseBtn.classList.toggle('active', isLowercase);
+    
+    var highlightBtn = document.querySelector('[onclick*="toggleHighlight"]');
+    if (highlightBtn) {
+      highlightBtn.classList.toggle('active', hasHighlight);
     }
-    if (capitalizeBtn) {
-      capitalizeBtn.classList.toggle('active', isCapitalized && isMixedCase && text.length > 0);
+    
+    if (sel.rangeCount > 0 && !sel.isCollapsed) {
+      var text = sel.toString();
+      
+      var uppercaseBtn = document.getElementById('transform-uppercase');
+      var lowercaseBtn = document.getElementById('transform-lowercase');
+      var capitalizeBtn = document.getElementById('transform-capitalize');
+      
+      var isUppercase = text === text.toUpperCase() && text.length > 0;
+      var isLowercase = text === text.toLowerCase() && text.length > 0;
+      var isMixedCase = !isUppercase && !isLowercase && text.length > 0;
+      
+      var words = text.split(' ');
+      var isCapitalized = words.every(function(word) {
+        return word.length > 0 && word[0] === word[0].toUpperCase();
+      });
+      
+      if (uppercaseBtn) {
+        uppercaseBtn.classList.toggle('active', isUppercase);
+      }
+      if (lowercaseBtn) {
+        lowercaseBtn.classList.toggle('active', isLowercase);
+      }
+      if (capitalizeBtn) {
+        capitalizeBtn.classList.toggle('active', isCapitalized && isMixedCase && text.length > 0);
+      }
+    } else {
+      document.getElementById('transform-uppercase')?.classList.remove('active');
+      document.getElementById('transform-lowercase')?.classList.remove('active');
+      document.getElementById('transform-capitalize')?.classList.remove('active');
     }
-  } else {
-    document.getElementById('transform-uppercase')?.classList.remove('active');
-    document.getElementById('transform-lowercase')?.classList.remove('active');
-    document.getElementById('transform-capitalize')?.classList.remove('active');
   }
-}
   
   updateFontInfo();
 }
+
+function selectFontColor(el) {
+  document.querySelectorAll('#font-color-popover .color-swatch').forEach(function(btn) {
+    btn.classList.remove('active');
+  });
+  el.classList.add('active');
+  var color = el.dataset.color;
+  
+  if (color === 'transparent' || color === 'sem-cor') {
+    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    color = isDark ? '#e8edf0' : '#1a2a2a';
+  }
+  
+  document.getElementById('font-preview').style.background = color;
+  document.getElementById('font-color-popover').style.display = 'none';
+  
+  var editor = document.getElementById('note-content');
+  editor.focus();
+  
+  document.execCommand('foreColor', false, color);
+  saveNoteOnChange();
+  saveState();
+}
+
+function toggleFontColorMenu() {
+  var popover = document.getElementById('font-color-popover');
+  popover.style.display = popover.style.display === 'none' ? 'block' : 'none';
+}
+
+function toggleHighlight() {
+  var editor = document.getElementById('note-content');
+  editor.focus();
+  
+  var sel = window.getSelection();
+  if (sel.rangeCount > 0 && !sel.isCollapsed) {
+    var range = sel.getRangeAt(0);
+    
+    var hasHighlight = false;
+    var container = range.commonAncestorContainer;
+    
+    if (container.nodeType === Node.ELEMENT_NODE && container.classList && container.classList.contains('highlight')) {
+      hasHighlight = true;
+    } else {
+      var parent = container.parentElement;
+      while (parent) {
+        if (parent.classList && parent.classList.contains('highlight')) {
+          hasHighlight = true;
+          break;
+        }
+        parent = parent.parentElement;
+      }
+    }
+    
+    if (!hasHighlight) {
+      var tempDiv = document.createElement('div');
+      tempDiv.appendChild(range.cloneContents());
+      var highlightSpans = tempDiv.querySelectorAll('.highlight');
+      if (highlightSpans.length > 0) {
+        hasHighlight = true;
+      }
+    }
+    
+    if (hasHighlight) {
+      var allHighlights = editor.querySelectorAll('.highlight');
+      allHighlights.forEach(function(span) {
+        var text = span.textContent;
+        span.replaceWith(text);
+      });
+      saveNoteOnChange();
+      saveState();
+      updateToolbarState();
+    } else {
+      try {
+        var text = range.toString();
+        if (!text) return;
+        
+        range.deleteContents();
+        var span = document.createElement('span');
+        span.className = 'highlight';
+        span.textContent = text;
+        
+        range.insertNode(span);
+        
+        range.setStart(span, 0);
+        range.setEnd(span, span.childNodes.length);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        
+        saveNoteOnChange();
+        saveState();
+        updateToolbarState();
+      } catch(e) {
+        document.execCommand('backColor', false, '#ffeb3b');
+        updateToolbarState();
+      }
+    }
+  } else {
+    showNotification('Selecione um texto primeiro.', 'error');
+  }
+}
+
 function insertLink() {
   var editor = document.getElementById('note-content');
   var sel = window.getSelection();
@@ -1163,7 +1500,7 @@ function insertLink() {
 
 function confirmLink() {
   var url = document.getElementById('link-url').value.trim();
-  var text = document.getElementById('link-text').value.trim();
+  var text = document.getElementById('link-text').value.trim() || url;
   
   if (!url) {
     showNotification('Insira uma URL.', 'error');
@@ -1176,19 +1513,16 @@ function confirmLink() {
   var editor = document.getElementById('note-content');
   editor.focus();
   
-  var sel = window.savedSelection || window.getSelection();
-  var range = window.savedRange || sel.getRangeAt(0);
+  var sel = window.getSelection();
+  var range = sel.getRangeAt(0);
   
-  if (!text && range.collapsed) {
-    text = url;
-  }
-  
+  // Se não tiver seleção, insere no cursor
   if (range.collapsed) {
     var linkElement = document.createElement('a');
     linkElement.href = url;
     linkElement.target = '_blank';
     linkElement.rel = 'noopener noreferrer';
-    linkElement.textContent = text || url;
+    linkElement.textContent = text;
     linkElement.style.color = 'var(--primary)';
     linkElement.style.textDecoration = 'underline';
     linkElement.style.cursor = 'pointer';
@@ -1204,7 +1538,7 @@ function confirmLink() {
     linkElement.href = url;
     linkElement.target = '_blank';
     linkElement.rel = 'noopener noreferrer';
-    linkElement.textContent = text || selectedText || url;
+    linkElement.textContent = text || selectedText;
     linkElement.style.color = 'var(--primary)';
     linkElement.style.textDecoration = 'underline';
     linkElement.style.cursor = 'pointer';
@@ -1427,6 +1761,7 @@ function switchTab(tab) {
     btn.classList.toggle('active', btn.dataset.tab === tab);
   });
   
+  updateBatchButtons();
   updateNoteList();
   loadFilterTags();
   applyFilters();
@@ -1442,6 +1777,25 @@ function toggleArchiveNote(index, event) {
   showNotification(savedNotes[index].archived ? '"' + noteName + '" arquivada!' : '"' + noteName + '" desarquivada!', 'success');
   loadFilterTags();
   applyFilters();
+}
+
+function toggleShadow() {
+  isShadowActive = !isShadowActive;
+  updateToolbarState();
+  
+  var sel = window.getSelection();
+  if (sel.rangeCount > 0 && !sel.isCollapsed) {
+    var range = sel.getRangeAt(0);
+    var span = document.createElement('span');
+    span.style.boxShadow = isShadowActive ? '0 4px 12px rgba(0,0,0,0.15)' : 'none';
+    span.style.display = 'inline-block';
+    span.style.padding = isShadowActive ? '4px 8px' : '0';
+    span.style.borderRadius = isShadowActive ? '4px' : '0';
+    
+    range.surroundContents(span);
+    saveNoteOnChange();
+    saveState();
+  }
 }
 
 function clearNoteSearch() {
@@ -1468,6 +1822,14 @@ document.addEventListener('click', function(e) {
     if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
       sidebar.classList.remove('open');
     }
+  }
+});
+
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.color-picker-wrapper')) {
+    document.querySelectorAll('.color-popover').forEach(function(el) {
+      el.style.display = 'none';
+    });
   }
 });
 
@@ -1538,35 +1900,82 @@ function handleFileUpload(event) {
   reader.onload = function(e) {
     var fileData = e.target.result;
     
+    var editor = document.getElementById('note-content');
+    editor.focus();
+    
+    var sel = window.getSelection();
+    var range;
+    
+    if (sel.rangeCount > 0) {
+      range = sel.getRangeAt(0);
+    } else {
+      range = document.createRange();
+      range.selectNodeContents(editor);
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
+    
     if (file.type.startsWith('image/')) {
+      var container = document.createElement('span');
+      container.className = 'image-container';
+      container.style.display = 'inline-flex';
+      container.style.flexWrap = 'wrap';
+      container.style.gap = '8px';
+      container.style.alignItems = 'flex-start';
+      container.style.margin = '4px 0';
+      
       var img = document.createElement('img');
       img.src = fileData;
-      img.style.maxWidth = '100%';
-      img.style.maxHeight = '400px';
+      img.style.maxWidth = '200px';
+      img.style.maxHeight = '200px';
+      img.style.objectFit = 'cover';
       img.style.borderRadius = '8px';
-      img.style.margin = '8px 0';
-      img.style.display = 'block';
       img.style.border = '1px solid var(--border)';
+      img.style.cursor = 'pointer';
+      img.style.display = 'inline-block';
       
-      document.execCommand('insertHTML', false, img.outerHTML);
+      container.appendChild(img);
+      range.insertNode(container);
+      
+      range.setStartAfter(container);
+      range.setEndAfter(container);
+      sel.removeAllRanges();
+      sel.addRange(range);
+      
       showNotification('Imagem inserida com sucesso!', 'success');
     } else {
-      var link = document.createElement('a');
-      link.href = fileData;
-      link.textContent = '📎 ' + file.name;
-      link.download = file.name;
-      link.style.display = 'inline-block';
-      link.style.padding = '6px 12px';
-      link.style.background = 'var(--primary-bg)';
-      link.style.borderRadius = '6px';
-      link.style.margin = '4px 0';
-      link.style.color = 'var(--primary)';
-      link.style.textDecoration = 'none';
-      link.style.cursor = 'pointer';
-      link.target = '_blank';
-      link.rel = 'noopener noreferrer';
+      var linkElement = document.createElement('a');
+      linkElement.href = fileData;
+      linkElement.target = '_blank';
+      linkElement.rel = 'noopener noreferrer';
+      linkElement.download = file.name;
+      linkElement.style.display = 'inline-block';
+      linkElement.style.padding = '6px 12px';
+      linkElement.style.background = 'var(--primary-bg)';
+      linkElement.style.borderRadius = '6px';
+      linkElement.style.margin = '4px 0';
+      linkElement.style.color = 'var(--primary)';
+      linkElement.style.textDecoration = 'none';
+      linkElement.style.cursor = 'pointer';
+      linkElement.innerHTML = '<i class="fas fa-paperclip" style="margin-right:6px;"></i> ' + file.name;
       
-      document.execCommand('insertHTML', false, link.outerHTML);
+      linkElement.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var a = document.createElement('a');
+        a.href = fileData;
+        a.download = file.name;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      });
+      
+      range.insertNode(linkElement);
+      
+      range.setStartAfter(linkElement);
+      range.setEndAfter(linkElement);
+      sel.removeAllRanges();
+      sel.addRange(range);
+      
       showNotification('Arquivo anexado com sucesso!', 'success');
     }
     
@@ -1907,6 +2316,12 @@ document.getElementById('note-content').addEventListener('click', function(e) {
   var menu = document.getElementById('image-context-menu');
   menu.style.display = 'none';
   
+  if (target.tagName === 'A' && target.href) {
+    e.preventDefault();
+    window.open(target.href, '_blank');
+    return;
+  }
+  
   if (target.tagName === 'IMG') {
     selectedImage = target;
     showContextMenu(e.clientX, e.clientY);
@@ -1921,9 +2336,18 @@ document.addEventListener('click', function(e) {
 });
 
 document.getElementById('note-content').addEventListener('keydown', function(e) {
+  if (e.key === 'Tab') {
+    e.preventDefault();
+    document.execCommand('insertHTML', false, '&nbsp;&nbsp;&nbsp;&nbsp;');
+    saveNoteOnChange();
+    saveState();
+    return;
+  }
+  
   if (e.key === 'Enter' && e.target.tagName === 'A') {
     e.preventDefault();
     window.open(e.target.href, '_blank');
+    return;
   }
   
   if (e.key === 'Enter' && isChecklistActive) {
@@ -1986,6 +2410,27 @@ document.getElementById('note-content').addEventListener('keydown', function(e) 
     }
   }
 });
+
+function toggleColorPicker(type) {
+  var popoverId = type === 'highlight' ? 'highlight-color-popover' : 'font-color-popover';
+  var popover = document.getElementById(popoverId);
+  
+  if (!popover) {
+    var allPopovers = document.querySelectorAll('.color-popover');
+    allPopovers.forEach(function(el) {
+      el.style.display = 'none';
+    });
+    return;
+  }
+  
+  document.querySelectorAll('.color-popover').forEach(function(el) {
+    if (el.id !== popoverId) {
+      el.style.display = 'none';
+    }
+  });
+  
+  popover.style.display = popover.style.display === 'none' ? 'block' : 'none';
+}
 
 document.getElementById('note-content').addEventListener('change', function(e) {
   if (e.target.type === 'checkbox') {
@@ -2166,6 +2611,7 @@ document.getElementById('note-content').addEventListener('focusout', function(e)
     }, 10);
   }
 });
+
 document.querySelectorAll('#editor-toolbar .toolbar-btn[data-command]').forEach(function(btn) {
   btn.addEventListener('mousedown', function(e) {
     saveSelection();

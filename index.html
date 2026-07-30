@@ -21,10 +21,24 @@
 <div class="sidebar-header">
   <i class="fas fa-sticky-note"></i>
   <h2>Notas</h2>
-  <button id="new-note-btn" class="icon-btn" onclick="createNewNote()" title="Nova Nota">
+
+  <span class="note-count" id="note-count">0</span>
+</div>
+
+<div class="sidebar-actions">
+  <button class="multi-select-toggle" onclick="toggleMultiSelect()" title="Selecionar múltiplas notas">
+    <i class="fas fa-check-double"></i>
+  </button>
+    <button id="new-note-btn" class="icon-btn" onclick="createNewNote()" title="Nova Nota">
     <i class="fas fa-plus"></i>
   </button>
-  <span class="note-count" id="note-count">0</span>
+  <div class="multi-select-actions" id="multi-select-actions" style="display:none;">
+    <button onclick="batchPin()" title="Fixar selecionadas"><i class="fas fa-thumbtack"></i></button>
+    <button id="batch-archive-btn" onclick="batchArchive()" title="Arquivar selecionadas"><i class="fas fa-archive"></i></button>
+    <button id="batch-unarchive-btn" onclick="batchUnarchive()" style="display:none;" title="Desarquivar selecionadas"><i class="fas fa-undo"></i></button>
+    <button onclick="batchDelete()" title="Excluir selecionadas" class="btn-danger"><i class="fas fa-trash"></i></button>
+    <span id="selected-count">0</span>
+  </div>
 </div>
 
 <div class="sidebar-tabs">
@@ -93,6 +107,58 @@
     <button class="toolbar-btn" data-command="strikeThrough" title="Tachado"><i class="fas fa-strikethrough"></i></button>
   </div>
 
+<div class="toolbar-group">
+  <button class="toolbar-btn" onclick="toggleHighlight()" title="Realce (marcador)"><i class="fas fa-highlighter"></i></button>
+</div>
+
+<div class="toolbar-group">
+  <button class="toolbar-btn" onclick="toggleFontColorMenu()" title="Cor da fonte"><i class="fas fa-font"></i></button>
+  <div class="color-picker-wrapper">
+    <button class="color-picker-btn" onclick="toggleColorPicker('font')" title="Cor da fonte">
+      <span class="color-preview" id="font-preview" style="background:#1a2a2a;"></span>
+      <i class="fas fa-chevron-down"></i>
+    </button>
+    <div class="color-popover" id="font-color-popover" style="display:none;">
+      <div class="color-grid">
+        <div class="color-section">
+          <span class="color-label">Cores</span>
+          <div class="color-options">
+            <button class="color-swatch" data-color="#1a2a2a" style="background:#1a2a2a;" onclick="selectFontColor(this)"></button>
+            <button class="color-swatch" data-color="#e74c3c" style="background:#e74c3c;" onclick="selectFontColor(this)"></button>
+            <button class="color-swatch" data-color="#e67e22" style="background:#e67e22;" onclick="selectFontColor(this)"></button>
+            <button class="color-swatch" data-color="#f1c40f" style="background:#f1c40f;" onclick="selectFontColor(this)"></button>
+            <button class="color-swatch" data-color="#2ecc71" style="background:#2ecc71;" onclick="selectFontColor(this)"></button>
+            <button class="color-swatch" data-color="#1abc9c" style="background:#1abc9c;" onclick="selectFontColor(this)"></button>
+            <button class="color-swatch" data-color="#3498db" style="background:#3498db;" onclick="selectFontColor(this)"></button>
+            <button class="color-swatch" data-color="#9b59b6" style="background:#9b59b6;" onclick="selectFontColor(this)"></button>
+            <button class="color-swatch" data-color="#34495e" style="background:#34495e;" onclick="selectFontColor(this)"></button>
+            <button class="color-swatch" data-color="#7f8c8d" style="background:#7f8c8d;" onclick="selectFontColor(this)"></button>
+          </div>
+        </div>
+        <div class="color-section">
+          <span class="color-label">Tons</span>
+          <div class="color-options">
+            <button class="color-swatch" data-color="#fadbd8" style="background:#fadbd8;" onclick="selectFontColor(this)"></button>
+            <button class="color-swatch" data-color="#f5cba7" style="background:#f5cba7;" onclick="selectFontColor(this)"></button>
+            <button class="color-swatch" data-color="#f9e79f" style="background:#f9e79f;" onclick="selectFontColor(this)"></button>
+            <button class="color-swatch" data-color="#a9dfbf" style="background:#a9dfbf;" onclick="selectFontColor(this)"></button>
+            <button class="color-swatch" data-color="#a3e4d7" style="background:#a3e4d7;" onclick="selectFontColor(this)"></button>
+            <button class="color-swatch" data-color="#aed6f1" style="background:#aed6f1;" onclick="selectFontColor(this)"></button>
+            <button class="color-swatch" data-color="#d7bde2" style="background:#d7bde2;" onclick="selectFontColor(this)"></button>
+            <button class="color-swatch" data-color="#aeb6bf" style="background:#aeb6bf;" onclick="selectFontColor(this)"></button>
+          </div>
+        </div>
+        <div class="color-section">
+          <span class="color-label">Sem cor</span>
+          <div class="color-options">
+            <button class="color-swatch" data-color="transparent" style="background:transparent;border:1px dashed #ccc;" onclick="selectFontColor(this)">✕</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
   <div class="toolbar-group">
     <button class="toolbar-btn" data-command="insertUnorderedList" title="Lista"><i class="fas fa-list-ul"></i></button>
     <button class="toolbar-btn" data-command="insertOrderedList" title="Lista numerada"><i class="fas fa-list-ol"></i></button>
@@ -148,6 +214,18 @@
       <option value="72">72</option>
     </select>
   </div>
+
+  <div class="toolbar-group">
+  <button class="toolbar-btn" onclick="formatText('justifyLeft')" title="Alinhar à esquerda"><i class="fas fa-align-left"></i></button>
+  <button class="toolbar-btn" onclick="formatText('justifyCenter')" title="Centralizar"><i class="fas fa-align-center"></i></button>
+  <button class="toolbar-btn" onclick="formatText('justifyRight')" title="Alinhar à direita"><i class="fas fa-align-right"></i></button>
+  <button class="toolbar-btn" onclick="formatText('justifyFull')" title="Justificar"><i class="fas fa-align-justify"></i></button>
+</div>
+
+<div class="toolbar-group">
+  <button class="toolbar-btn" onclick="formatText('indent')" title="Aumentar recuo"><i class="fas fa-indent"></i></button>
+  <button class="toolbar-btn" onclick="formatText('outdent')" title="Diminuir recuo"><i class="fas fa-outdent"></i></button>
+</div>
 
   <div class="toolbar-group">
     <button class="toolbar-btn" id="transform-uppercase" title="MAIÚSCULO"><i class="fas fa-font"></i><sup>A</sup></button>
@@ -375,6 +453,27 @@
       <i class="fas fa-check"></i>
       <span>Concluir</span>
     </button>
+  </div>
+</div>
+
+<div id="batch-delete-modal" class="modal">
+  <div class="modal-content">
+    <button class="close-modal" onclick="closeModal('batch-delete-modal')">
+      <i class="fas fa-times"></i>
+    </button>
+    <h2 class="modal-title"><i class="fas fa-trash"></i> Confirmar Exclusão em Lote</h2>
+    <p id="batch-delete-message">Tem certeza que deseja excluir as notas selecionadas?</p>
+    <div id="batch-delete-list" style="max-height:200px;overflow-y:auto;margin:12px 0;padding:8px 12px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border);font-size:0.85rem;color:var(--text-secondary);"></div>
+    <div class="modal-buttons">
+      <button class="btn-danger" onclick="confirmBatchDelete()">
+        <i class="fas fa-trash"></i>
+        <span>Excluir</span>
+      </button>
+      <button class="btn-secondary" onclick="closeModal('batch-delete-modal')">
+        <i class="fas fa-times"></i>
+        <span>Cancelar</span>
+      </button>
+    </div>
   </div>
 </div>
 
