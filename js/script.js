@@ -19,6 +19,8 @@ let selectedImage = null;
 let currentTab = 'active';
 
 let saveTimeout = null;
+let savedRange = null;
+let savedSelection = null;
 
 window.onload = function() {
   updateNoteList();
@@ -34,6 +36,27 @@ window.onload = function() {
   document.getElementById('note-content').addEventListener('keyup', updateFontInfo);
   document.getElementById('note-content').addEventListener('click', updateFontInfo);
 };
+
+function saveSelection() {
+  var sel = window.getSelection();
+  if (sel.rangeCount > 0) {
+    savedSelection = sel;
+    savedRange = sel.getRangeAt(0).cloneRange();
+  }
+}
+
+function restoreSelection() {
+  if (savedRange && savedSelection) {
+    try {
+      savedSelection.removeAllRanges();
+      savedSelection.addRange(savedRange);
+    } catch(e) {
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(savedRange);
+    }
+  }
+}
 
 function updateSaveIndicator(status, message) {
   var indicator = document.getElementById('save-indicator');
@@ -64,8 +87,6 @@ function showNoteDialog() {
     document.getElementById('note-name').focus();
   }
 }
-
-
 
 function closeNoteDialog() {
   document.getElementById('note-dialog').style.display = 'none';
@@ -503,8 +524,7 @@ function clearNote() {
   updateToolbarState();
   undoStack = [];
   redoStack = [];
-updateSaveIndicator('saved', 'Salvo ✓');
-
+  updateSaveIndicator('saved', 'Salvo ✓');
 }
 
 function highlightActiveNote(activeIndex) {
@@ -777,6 +797,7 @@ function saveNoteOnChange() {
     saveState();
   }
 }
+
 function saveState() {
   var content = document.getElementById('note-content').innerHTML;
   if (undoStack.length === 0 || undoStack[undoStack.length - 1] !== content) {
@@ -918,22 +939,54 @@ function showNotification(message, type) {
 }
 
 function formatText(command) {
+  restoreSelection();
+  var editor = document.getElementById('note-content');
+  editor.focus();
+  
+  var sel = window.getSelection();
+  if (sel.rangeCount === 0 || sel.isCollapsed) {
+    showNotification('Selecione um texto primeiro.', 'error');
+    return;
+  }
+  
   document.execCommand(command, false, null);
-  document.getElementById('note-content').focus();
+  editor.focus();
   saveNoteOnChange();
   saveState();
   updateToolbarState();
 }
 
 function changeFont() {
+  restoreSelection();
+  
+  var editor = document.getElementById('note-content');
+  editor.focus();
+  
+  var sel = window.getSelection();
+  if (sel.rangeCount === 0 || sel.isCollapsed) {
+    showNotification('Selecione um texto primeiro.', 'error');
+    return;
+  }
+  
   var font = document.getElementById('font-select').value;
   document.execCommand('fontName', false, font);
-  document.getElementById('note-content').focus();
+  editor.focus();
   saveNoteOnChange();
   saveState();
 }
 
 function changeFontSize() {
+  restoreSelection();
+  
+  var editor = document.getElementById('note-content');
+  editor.focus();
+  
+  var sel = window.getSelection();
+  if (sel.rangeCount === 0 || sel.isCollapsed) {
+    showNotification('Selecione um texto primeiro.', 'error');
+    return;
+  }
+  
   var size = document.getElementById('font-size-select').value;
   document.execCommand('fontSize', false, '7');
   
@@ -943,44 +996,57 @@ function changeFontSize() {
     span.removeAttribute('size');
   });
   
-  document.getElementById('note-content').focus();
+  editor.focus();
   saveNoteOnChange();
   saveState();
 }
 
 function transformText(type) {
-  var sel = window.getSelection();
-  var range = sel.getRangeAt(0);
+  restoreSelection();
   
-  if (range.collapsed) {
-    showNotification('Selecione um texto primeiro.', 'error');
-    return;
-  }
-  
-  var text = range.toString();
-  var transformed = '';
-  
-  if (type === 'uppercase') {
-    transformed = text.toUpperCase();
-  } else if (type === 'lowercase') {
-    transformed = text.toLowerCase();
-  } else if (type === 'capitalize') {
-    transformed = text.replace(/\b\w/g, function(c) { return c.toUpperCase(); });
-  }
-  
-  range.deleteContents();
-  var textNode = document.createTextNode(transformed);
-  range.insertNode(textNode);
-  
-  range.setStartAfter(textNode);
-  range.setEndAfter(textNode);
-  sel.removeAllRanges();
-  sel.addRange(range);
-  
-  document.getElementById('note-content').focus();
-  saveNoteOnChange();
-  saveState();
-  updateToolbarState();
+  setTimeout(function() {
+    var editor = document.getElementById('note-content');
+    editor.focus();
+    
+    var sel = window.getSelection();
+    var range = sel.getRangeAt(0);
+    
+    if (range.collapsed) {
+      showNotification('Selecione um texto primeiro.', 'error');
+      return;
+    }
+    
+    var text = range.toString();
+    var transformed = '';
+    
+    if (type === 'uppercase') {
+      transformed = text.toUpperCase();
+    } else if (type === 'lowercase') {
+      transformed = text.toLowerCase();
+    } else if (type === 'capitalize') {
+      transformed = text.toLowerCase().replace(/\b\w/g, function(c) { 
+        return c.toUpperCase(); 
+      });
+    }
+    
+    range.deleteContents();
+    var textNode = document.createTextNode(transformed);
+    range.insertNode(textNode);
+    
+    range.setStart(textNode, 0);
+    range.setEnd(textNode, transformed.length);
+    sel.removeAllRanges();
+    sel.addRange(range);
+    
+    editor.focus();
+    saveNoteOnChange();
+    saveState();
+    
+    setTimeout(function() {
+      updateToolbarState();
+      updateFontInfo();
+    }, 10);
+  }, 10);
 }
 
 function updateFontInfo() {
@@ -1007,8 +1073,20 @@ function updateFontInfo() {
 }
 
 function updateToolbarState() {
+  var editIndex = localStorage.getItem('editNoteIndex');
   var buttons = document.querySelectorAll('.toolbar-btn');
+  
   buttons.forEach(function(btn) {
+    var command = btn.dataset.command;
+    if (command) {
+      try {
+        var isActive = document.queryCommandState(command);
+        btn.classList.toggle('active', isActive);
+      } catch(e) {
+        btn.classList.remove('active');
+      }
+    }
+    
     var cmd = btn.getAttribute('onclick');
     if (cmd && cmd.includes('formatText')) {
       var match = cmd.match(/formatText\('([^']+)'\)/);
@@ -1026,9 +1104,43 @@ function updateToolbarState() {
     }
   });
   
+if (editIndex !== null) {
+  var sel = window.getSelection();
+  if (sel.rangeCount > 0 && !sel.isCollapsed) {
+    var text = sel.toString();
+    
+    var uppercaseBtn = document.getElementById('transform-uppercase');
+    var lowercaseBtn = document.getElementById('transform-lowercase');
+    var capitalizeBtn = document.getElementById('transform-capitalize');
+    
+    var isUppercase = text === text.toUpperCase() && text.length > 0;
+    var isLowercase = text === text.toLowerCase() && text.length > 0;
+    
+    var isMixedCase = !isUppercase && !isLowercase && text.length > 0;
+    
+    var words = text.split(' ');
+    var isCapitalized = words.every(function(word) {
+      return word.length > 0 && word[0] === word[0].toUpperCase();
+    });
+    
+    if (uppercaseBtn) {
+      uppercaseBtn.classList.toggle('active', isUppercase);
+    }
+    if (lowercaseBtn) {
+      lowercaseBtn.classList.toggle('active', isLowercase);
+    }
+    if (capitalizeBtn) {
+      capitalizeBtn.classList.toggle('active', isCapitalized && isMixedCase && text.length > 0);
+    }
+  } else {
+    document.getElementById('transform-uppercase')?.classList.remove('active');
+    document.getElementById('transform-lowercase')?.classList.remove('active');
+    document.getElementById('transform-capitalize')?.classList.remove('active');
+  }
+}
+  
   updateFontInfo();
 }
-
 function insertLink() {
   var editor = document.getElementById('note-content');
   var sel = window.getSelection();
@@ -1770,9 +1882,25 @@ document.getElementById('theme-toggle').addEventListener('click', function() {
   }
 });
 
-document.getElementById('note-content').addEventListener('mouseup', updateToolbarState);
-document.getElementById('note-content').addEventListener('keyup', updateToolbarState);
-document.getElementById('note-content').addEventListener('click', updateToolbarState);
+document.getElementById('note-content').addEventListener('mouseup', function() {
+  updateToolbarState();
+  updateFontInfo();
+});
+
+document.getElementById('note-content').addEventListener('keyup', function() {
+  updateToolbarState();
+  updateFontInfo();
+});
+
+document.getElementById('note-content').addEventListener('click', function() {
+  updateToolbarState();
+  updateFontInfo();
+});
+
+document.getElementById('note-content').addEventListener('selectionchange', function() {
+  updateToolbarState();
+  updateFontInfo();
+});
 
 document.getElementById('note-content').addEventListener('click', function(e) {
   var target = e.target;
@@ -2006,37 +2134,15 @@ document.getElementById('note-content').addEventListener('paste', function(e) {
   saveState();
 });
 
-document.addEventListener('mousedown', function(e) {
-  var noteContent = document.getElementById('note-content');
-  var editIndex = localStorage.getItem('editNoteIndex');
-  
-  if (editIndex !== null && noteContent) {
-    var target = e.target;
-    var isInsideNote = noteContent.contains(target);
-    var isToolbar = target.closest('#editor-toolbar');
-    var isEmoji = target.closest('.emoji-container');
-    var isButtons = target.closest('#note-buttons');
-    var isSearch = target.closest('#note-search-bar');
-    var isSidebar = target.closest('#sidebar');
-    var isModal = target.closest('.modal');
-    var isMenu = target.closest('.image-context-menu');
-    var isStats = target.closest('#note-stats');
-    var isHeader = target.closest('#top-bar');
-    var isToggleSidebar = target.closest('#toggle-sidebar');
-    
-    if (!isInsideNote && !isToolbar && !isEmoji && !isButtons && !isSearch && !isSidebar && !isModal && !isMenu && !isStats && !isHeader && !isToggleSidebar) {
-      e.preventDefault();
-      noteContent.focus();
-    }
-  }
-}, true);
-
 document.getElementById('note-content').addEventListener('focusout', function(e) {
   var editIndex = localStorage.getItem('editNoteIndex');
   if (editIndex !== null) {
     var relatedTarget = e.relatedTarget;
+    
     if (relatedTarget) {
       var isToolbar = relatedTarget.closest('#editor-toolbar');
+      var isToolbarBtn = relatedTarget.closest('#editor-toolbar button');
+      var isToolbarSelect = relatedTarget.closest('#editor-toolbar select');
       var isEmoji = relatedTarget.closest('.emoji-container');
       var isButtons = relatedTarget.closest('#note-buttons');
       var isSearch = relatedTarget.closest('#note-search-bar');
@@ -2047,7 +2153,7 @@ document.getElementById('note-content').addEventListener('focusout', function(e)
       var isHeader = relatedTarget.closest('#top-bar');
       var isToggleSidebar = relatedTarget.closest('#toggle-sidebar');
       
-      if (!isToolbar && !isEmoji && !isButtons && !isSearch && !isSidebar && !isModal && !isMenu && !isStats && !isHeader && !isToggleSidebar) {
+      if (isToolbar || isToolbarBtn || isToolbarSelect || isEmoji || isButtons || isSearch || isSidebar || isModal || isMenu || isStats || isHeader || isToggleSidebar) {
         return;
       }
     }
@@ -2055,21 +2161,65 @@ document.getElementById('note-content').addEventListener('focusout', function(e)
     setTimeout(function() {
       var noteContent = document.getElementById('note-content');
       if (document.activeElement !== noteContent) {
-        var sel = window.getSelection();
-        var range = document.createRange();
-        var lastNode = noteContent.lastChild;
-        
-        if (lastNode) {
-          range.setStart(lastNode, lastNode.length || 0);
-          range.setEnd(lastNode, lastNode.length || 0);
-        } else {
-          range.selectNodeContents(noteContent);
-        }
-        
-        sel.removeAllRanges();
-        sel.addRange(range);
         noteContent.focus();
       }
     }, 10);
   }
+});
+document.querySelectorAll('#editor-toolbar .toolbar-btn[data-command]').forEach(function(btn) {
+  btn.addEventListener('mousedown', function(e) {
+    saveSelection();
+  });
+  btn.addEventListener('click', function() {
+    var command = this.dataset.command;
+    formatText(command);
+  });
+});
+
+document.getElementById('insert-link-btn').addEventListener('click', function() {
+  insertLink();
+});
+
+document.getElementById('toggle-note-search-btn').addEventListener('click', function() {
+  toggleNoteSearch();
+});
+
+document.getElementById('open-attachment-btn').addEventListener('click', function() {
+  openAttachmentModal();
+});
+
+document.getElementById('undo-btn').addEventListener('click', function() {
+  undoAction();
+});
+
+document.getElementById('redo-btn').addEventListener('click', function() {
+  redoAction();
+});
+
+document.getElementById('font-select').addEventListener('mousedown', function(e) {
+  saveSelection();
+});
+
+document.getElementById('font-select').addEventListener('change', function() {
+  changeFont();
+});
+
+document.getElementById('font-size-select').addEventListener('mousedown', function(e) {
+  saveSelection();
+});
+
+document.getElementById('font-size-select').addEventListener('change', function() {
+  changeFontSize();
+});
+
+document.getElementById('transform-uppercase').addEventListener('click', function() {
+  transformText('uppercase');
+});
+
+document.getElementById('transform-lowercase').addEventListener('click', function() {
+  transformText('lowercase');
+});
+
+document.getElementById('transform-capitalize').addEventListener('click', function() {
+  transformText('capitalize');
 });

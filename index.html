@@ -8,6 +8,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image" sizes="16x16" href="img/notepad.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;500;600;700&family=Lato:wght@300;400;700&family=Nunito:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Source+Code+Pro:wght@300;400;500;600;700&family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
 <title>Bloco de Notas</title>
 </head>
@@ -82,78 +85,83 @@
     </header>
 
     <div id="editor-area">
-      <div id="editor-toolbar">
-        <div class="toolbar-group">
-          <button class="toolbar-btn" onclick="formatText('bold')" title="Negrito (Ctrl+B)"><i class="fas fa-bold"></i></button>
-          <button class="toolbar-btn" onclick="formatText('italic')" title="Itálico (Ctrl+I)"><i class="fas fa-italic"></i></button>
-          <button class="toolbar-btn" onclick="formatText('underline')" title="Sublinhado (Ctrl+U)"><i class="fas fa-underline"></i></button>
-          <button class="toolbar-btn" onclick="formatText('strikeThrough')" title="Tachado"><i class="fas fa-strikethrough"></i></button>
-        </div>
+<div id="editor-toolbar">
+  <div class="toolbar-group">
+    <button class="toolbar-btn" data-command="bold" title="Negrito (Ctrl+B)"><i class="fas fa-bold"></i></button>
+    <button class="toolbar-btn" data-command="italic" title="Itálico (Ctrl+I)"><i class="fas fa-italic"></i></button>
+    <button class="toolbar-btn" data-command="underline" title="Sublinhado (Ctrl+U)"><i class="fas fa-underline"></i></button>
+    <button class="toolbar-btn" data-command="strikeThrough" title="Tachado"><i class="fas fa-strikethrough"></i></button>
+  </div>
 
-        <div class="toolbar-group">
-          <button class="toolbar-btn" onclick="formatText('insertUnorderedList')" title="Lista"><i class="fas fa-list-ul"></i></button>
-          <button class="toolbar-btn" onclick="formatText('insertOrderedList')" title="Lista numerada"><i class="fas fa-list-ol"></i></button>
-          <!-- <button class="toolbar-btn" onclick="insertChecklist()" title="Lista de tarefas"><i class="fas fa-check-square"></i></button> -->
-        </div>
+  <div class="toolbar-group">
+    <button class="toolbar-btn" data-command="insertUnorderedList" title="Lista"><i class="fas fa-list-ul"></i></button>
+    <button class="toolbar-btn" data-command="insertOrderedList" title="Lista numerada"><i class="fas fa-list-ol"></i></button>
+  </div>
 
-        <div class="toolbar-group">
-          <button class="toolbar-btn" onclick="insertLink()" title="Inserir link"><i class="fas fa-link"></i></button>
-          <button class="toolbar-btn" onclick="toggleNoteSearch()" title="Buscar na nota"><i class="fas fa-search"></i></button>
-          <button class="toolbar-btn" onclick="openAttachmentModal()" title="Inserir imagem ou arquivo"><i class="fas fa-paperclip"></i></button>
-        </div>
+  <div class="toolbar-group">
+    <button class="toolbar-btn" id="insert-link-btn" title="Inserir link"><i class="fas fa-link"></i></button>
+    <button class="toolbar-btn" id="toggle-note-search-btn" title="Buscar na nota"><i class="fas fa-search"></i></button>
+    <button class="toolbar-btn" id="open-attachment-btn" title="Inserir imagem ou arquivo"><i class="fas fa-paperclip"></i></button>
+  </div>
 
-        <div class="toolbar-group">
-          <button class="toolbar-btn" onclick="undoAction()" title="Desfazer (Ctrl+Z)"><i class="fas fa-undo"></i></button>
-          <button class="toolbar-btn" onclick="redoAction()" title="Refazer (Ctrl+Y)"><i class="fas fa-redo"></i></button>
-        </div>
+  <div class="toolbar-group">
+    <button class="toolbar-btn" id="undo-btn" title="Desfazer (Ctrl+Z)"><i class="fas fa-undo"></i></button>
+    <button class="toolbar-btn" id="redo-btn" title="Refazer (Ctrl+Y)"><i class="fas fa-redo"></i></button>
+  </div>
 
-        <div class="toolbar-group">
-          <select id="font-select" onchange="changeFont()" title="Fonte">
-            <option value="Inter">Inter</option>
-            <option value="Arial">Arial</option>
-            <option value="Times New Roman">Times New Roman</option>
-            <option value="Georgia">Georgia</option>
-            <option value="Courier New">Courier New</option>
-            <option value="Verdana">Verdana</option>
-            <option value="Roboto">Roboto</option>
-            <option value="Poppins">Poppins</option>
-            <option value="Montserrat">Montserrat</option>
-          </select>
-        </div>
+  <div class="toolbar-group">
+<select id="font-select" title="Fonte">
+  <option value="Inter">Inter</option>
+  <option value="Arial">Arial</option>
+  <option value="Times New Roman">Times New Roman</option>
+  <option value="Georgia">Georgia</option>
+  <option value="Courier New">Courier New</option>
+  <option value="Verdana">Verdana</option>
+  <option value="Roboto">Roboto</option>
+  <option value="Poppins">Poppins</option>
+  <option value="Montserrat">Montserrat</option>
+  <option value="Open Sans">Open Sans</option>
+  <option value="Lato">Lato</option>
+  <option value="Nunito">Nunito</option>
+  <option value="Playfair Display">Playfair Display</option>
+  <option value="Source Code Pro">Source Code Pro</option>
+  <option value="Oswald">Oswald</option>
+</select>
+  </div>
 
-        <div class="toolbar-group">
-          <select id="font-size-select" onchange="changeFontSize()" title="Tamanho">
-            <option value="10">10</option>
-            <option value="12">12</option>
-            <option value="14">14</option>
-            <option value="16" selected>16</option>
-            <option value="18">18</option>
-            <option value="20">20</option>
-            <option value="24">24</option>
-            <option value="28">28</option>
-            <option value="32">32</option>
-            <option value="36">36</option>
-            <option value="40">40</option>
-            <option value="48">48</option>
-            <option value="56">56</option>
-            <option value="64">64</option>
-            <option value="72">72</option>
-          </select>
-        </div>
+  <div class="toolbar-group">
+    <select id="font-size-select" title="Tamanho">
+      <option value="10">10</option>
+      <option value="12">12</option>
+      <option value="14">14</option>
+      <option value="16" selected>16</option>
+      <option value="18">18</option>
+      <option value="20">20</option>
+      <option value="24">24</option>
+      <option value="28">28</option>
+      <option value="32">32</option>
+      <option value="36">36</option>
+      <option value="40">40</option>
+      <option value="48">48</option>
+      <option value="56">56</option>
+      <option value="64">64</option>
+      <option value="72">72</option>
+    </select>
+  </div>
 
-        <div class="toolbar-group">
-          <button class="toolbar-btn" onclick="transformText('uppercase')" title="MAIÚSCULO"><i class="fas fa-font"></i><sup>A</sup></button>
-          <button class="toolbar-btn" onclick="transformText('lowercase')" title="minúsculo"><i class="fas fa-font"></i><sub>a</sub></button>
-          <button class="toolbar-btn" onclick="transformText('capitalize')" title="Primeira Letra Maiúscula"><i class="fas fa-font"></i><span style="font-size:0.6rem;">Aa</span></button>
-        </div>
+  <div class="toolbar-group">
+    <button class="toolbar-btn" id="transform-uppercase" title="MAIÚSCULO"><i class="fas fa-font"></i><sup>A</sup></button>
+    <button class="toolbar-btn" id="transform-lowercase" title="minúsculo"><i class="fas fa-font"></i><sub>a</sub></button>
+    <button class="toolbar-btn" id="transform-capitalize" title="Primeira Letra Maiúscula"><i class="fas fa-font"></i><span style="font-size:0.6rem;">Aa</span></button>
+  </div>
 
-<div class="toolbar-group" style="margin-left:auto;border-right:none;">
-  <span id="save-indicator" class="save-indicator">
-    <i class="fas fa-check-circle" style="color:#00b894;"></i>
-    <span>Salvo</span>
-  </span>
+  <div class="toolbar-group" style="margin-left:auto;border-right:none;">
+    <span id="save-indicator" class="save-indicator">
+      <i class="fas fa-check-circle" style="color:#00b894;"></i>
+      <span>Salvo</span>
+    </span>
+  </div>
 </div>
-      </div>
 
       <div id="note-search-bar" style="display:none;">
         <i class="fas fa-search"></i>
