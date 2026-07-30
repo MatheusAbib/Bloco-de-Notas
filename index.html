@@ -5,385 +5,373 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Jersey+25&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image" sizes="16x16" href="img/notepad.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="stylesheet" href="css/styles.css">
-
 <title>Bloco de Notas</title>
-
-<style>
-
-    @media (max-width: 600px) {
-    .notification-modal {
-        padding: 15px 20px;
-        font-size: 0.9rem;
-        min-width: 240px;
-        border-left-width: 4px;
-    }
-    
-    .notification-modal::before {
-        width: 20px;
-        height: 20px;
-    }
-}
-
-@media (max-width: 412px) {
-
-      .emoji-container {
-        height: 200px; 
-    }  
-
-    .notification-modal {
-        width: calc(100% - 40px);
-        max-width: none;
-    }
-}
-
-
-@media (max-width: 767px) {
-    #note-list {
-        max-height: calc(3 * 100px); 
-        overflow-y: auto;
-    }
-    
-    .note-card {
-        min-height: 80px; 
-    }
-    #main-content {
-        display: flex;
-        flex-direction: column-reverse; 
-    }
-    
-    #notes {
-        height: auto;
-        padding: 15px;
-    }
-    
-    #note-list {
-        flex: 0 0 auto; 
-    }
-    
-    textarea {
-        height: 300px; 
-    }
-}
-
-
-    @media (min-width: 768px) {
-    #notepad {
-        margin: 40px auto;
-    }
-
-   #main-content {
-        display: grid;
-        grid-template-columns: 300px 1fr;
-        grid-template-rows: 1fr; /* Ocupa toda altura disponível */
-        height: 82vh; /* Ajuste conforme necessário */
-    }
-
-    #notes {
-        height: auto; /* Deixa o grid controlar a altura */
-        position: relative;
-        padding: 15px 15px 15px 45px;
-    }
-
-    #note-list {
-            height: auto; /* Deixa o grid controlar a altura */
-            min-height: auto;
-        }
-
-    #notes::before {
-        content: "";
-        position: absolute;
-        left: 30px;
-        top: 0;
-        bottom: 0;
-        width: 2px;
-        background: repeating-linear-gradient(
-            to bottom,
-            transparent,
-            transparent 19px,
-            #e0e0e0 19px,
-            #e0e0e0 20px
-        );
-    }
-
-        .emoji-grid {
-            grid-template-columns: repeat(8, 1fr);
-        }
-        
-        .emoji-item {
-            width: 45px;
-            height: 45px;
-            font-size: 1.8rem;
-        }
-
-        .emoji-container {
-            max-height: 210px; 
-        }
-    }
-
-        .note-card {
-        display: flex;
-        align-items: center;
-        }
-
-        .folder-icon {
-        display: flex;
-        width: 40px;
-        height: 40px;
-        background-color: #f1c40faf;
-        border-radius: 50%;
-        align-items: center;
-        justify-content: center;
-        margin-right: 10px;
-        }
-
-        .folder-icon img {
-        width: 65%;
-        height: auto;
-        }
-
-        .note-content {
-        flex: 1;
-}
-
-/* Estilos para desktops */
-    @media (min-width: 1024px) {
-
-        .emoji-container {
-            height: 280px; /* Container de emojis mais compacto */
-        }  
-
-        #notepad {
-        margin: 60px auto;
-        }
-
-        .opt {
-        display: block;
-        }
-
-        #emoji-table td {
-        font-size: 1.6rem;
-        padding: 10px;
-        }
-
-
-        }
-
-    /* Estilos para telas muito grandes */
-    @media (min-width: 1440px) {
-        #notepad {
-        max-width: 1400px;
-        }
-
-        #notes {
-        padding: 30px;
-        }
-
-    }   
-
-    @media (min-width: 1024px) and (max-width: 1440px) {
-        #main-content {
-            grid-template-columns: 250px 1fr; /* Reduz a largura da lista de notas */
-            height: 73vh; /* Ajusta a altura baseado no viewport */
-        }
-        
-        #notes {
-            padding: 15px 15px 15px 30px; /* Reduz o padding esquerdo */
-        }
-        
-        textarea {
-            height: 37vh; /* Altura dinâmica baseada no viewport */
-            min-height: 260px; /* Altura mínima garantida */
-        }
-        
-        .emoji-container {
-            max-height: 25vh; /* Reduz a altura do container de emojis */
-        }
-    }
-
- 
-     @media (max-height: 660px) {
-
-        #main-content {
-        height: 85vh; /* Ajusta altura */
-
-        }
-
-        textarea {
-            height: 260px;
-            min-height: 260px;
-            margin-bottom: 0; /* Reduz espaço */
-
-        }
-        .emoji-container {
-            max-height: 190px; /* Container de emojis mais compacto */
-            margin-top: 15px;
-    
-        }
-    }
-
-    @media (min-height: 400px) and (max-width: 920px) {
-
-        .emoji-container {
-            max-height: 190px; /* Container de emojis mais compacto */
-    
-        }
-    }
-
-
-    *::-webkit-scrollbar-track {
-    background-color: rgba(160, 209, 193, 0.987);
-    }
-
-    *::-webkit-scrollbar-thumb {
-    background-color: hsla(160, 49%, 33%, 0.822);
-    border-radius: 100px;
-    }
-
-    *::-webkit-scrollbar {
-    height: 3px;
-    width: 4px;
-    }
-    /* Para garantir que a barra de rolagem seja visível */
-    #note-list::-webkit-scrollbar {
-        width: 5px;
-    }
-
-    #note-list::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 10px;
-    }
-
-    #note-list::-webkit-scrollbar-thumb {
-        background: hsl(160, 49%, 33%);
-        border-radius: 10px;
-    }
-
-    #note-list::-webkit-scrollbar-thumb:hover {
-        background: hsl(160, 49%, 25%);
-    }
-</style>
-
 </head>
 <body>
 
-<div id="notepad">
-<div id="header">
-<div class="titulo">
-<h2>Bloco de Notas</h2>
-</div>
-<div class="opt">
-<label class="category" for="opt-1"></label>
-<label class="category" for="opt-2"></label>
-<label class="category" for="opt-4"></label>
-<ul class="tasks-wrapper"></ul>
-</div>
+<div id="app">
+  <aside id="sidebar">
+<div class="sidebar-header">
+  <i class="fas fa-sticky-note"></i>
+  <h2>Notas</h2>
+  <button id="new-note-btn" class="icon-btn" onclick="createNewNote()" title="Nova Nota">
+    <i class="fas fa-plus"></i>
+  </button>
+  <span class="note-count" id="note-count">0</span>
 </div>
 
-<div id="main-content">
-<div id="notes">
-<textarea id="note-content" placeholder="Escreva suas notas aqui..." oninput="saveNoteOnChange()"></textarea>
+<div class="sidebar-tabs">
+  <button class="tab-btn active" data-tab="active" onclick="switchTab('active')">
+    <i class="fas fa-circle"></i> Ativas
+  </button>
+  <button class="tab-btn" data-tab="archived" onclick="switchTab('archived')">
+    <i class="fas fa-archive"></i> Arquivadas
+  </button>
+</div>
 
-<div class="emoji-container">
-    <div class="emoji-controls">
-        <div class="emoji-search">
-            <i class="fa fa-search"></i><input type="text" placeholder="Buscar emoji..." class="emoji-search-input" id="emoji-search">
+<div class="sidebar-search">
+  <i class="fas fa-search search-icon"></i>
+  <input type="text" id="search-notes" placeholder="Buscar notas..." oninput="searchNotes()">
+  <button class="search-clear" onclick="clearSearch()" title="Limpar busca">
+    <i class="fas fa-times"></i>
+  </button>
+</div>
+<div class="sidebar-filters">
+  <div class="filter-group">
+    <select id="filter-tag" onchange="applyFilters()">
+      <option value="all">Todas as tags</option>
+    </select>
+  </div>
+  <div class="filter-group">
+    <select id="filter-date" onchange="applyFilters()">
+      <option value="all">Todas as datas</option>
+      <option value="today">Hoje</option>
+      <option value="week">Esta semana</option>
+      <option value="month">Este mês</option>
+    </select>
+  </div>
+  <button class="filter-clear hidden" onclick="clearFilters()" title="Limpar filtros">
+    <i class="fas fa-times"></i>
+  </button>
+</div>
+    <div id="note-list">
+      <div id="saved-notes"></div>
+    </div>
+  </aside>
+
+  <main id="main-content">
+    <header id="top-bar">
+      <div class="top-bar-left">
+        <button id="toggle-sidebar" class="icon-btn">
+          <i class="fas fa-bars"></i>
+        </button>
+        <h1 id="note-title-display">Bloco de Notas</h1>
+      </div>
+      <div class="top-bar-right">
+        <button id="focus-mode-btn" class="icon-btn" onclick="toggleFocusMode()" title="Modo Foco">
+          <i class="fas fa-expand"></i>
+        </button>
+        <button id="theme-toggle" class="icon-btn">
+          <i class="fas fa-moon"></i>
+        </button>
+      </div>
+    </header>
+
+    <div id="editor-area">
+      <div id="editor-toolbar">
+        <div class="toolbar-group">
+          <button class="toolbar-btn" onclick="formatText('bold')" title="Negrito (Ctrl+B)"><i class="fas fa-bold"></i></button>
+          <button class="toolbar-btn" onclick="formatText('italic')" title="Itálico (Ctrl+I)"><i class="fas fa-italic"></i></button>
+          <button class="toolbar-btn" onclick="formatText('underline')" title="Sublinhado (Ctrl+U)"><i class="fas fa-underline"></i></button>
+          <button class="toolbar-btn" onclick="formatText('strikeThrough')" title="Tachado"><i class="fas fa-strikethrough"></i></button>
         </div>
-        <div class="emoji-categories">
+
+        <div class="toolbar-group">
+          <button class="toolbar-btn" onclick="formatText('insertUnorderedList')" title="Lista"><i class="fas fa-list-ul"></i></button>
+          <button class="toolbar-btn" onclick="formatText('insertOrderedList')" title="Lista numerada"><i class="fas fa-list-ol"></i></button>
+          <!-- <button class="toolbar-btn" onclick="insertChecklist()" title="Lista de tarefas"><i class="fas fa-check-square"></i></button> -->
+        </div>
+
+        <div class="toolbar-group">
+          <button class="toolbar-btn" onclick="insertLink()" title="Inserir link"><i class="fas fa-link"></i></button>
+          <button class="toolbar-btn" onclick="toggleNoteSearch()" title="Buscar na nota"><i class="fas fa-search"></i></button>
+          <button class="toolbar-btn" onclick="openAttachmentModal()" title="Inserir imagem ou arquivo"><i class="fas fa-paperclip"></i></button>
+        </div>
+
+        <div class="toolbar-group">
+          <button class="toolbar-btn" onclick="undoAction()" title="Desfazer (Ctrl+Z)"><i class="fas fa-undo"></i></button>
+          <button class="toolbar-btn" onclick="redoAction()" title="Refazer (Ctrl+Y)"><i class="fas fa-redo"></i></button>
+        </div>
+
+        <div class="toolbar-group">
+          <select id="font-select" onchange="changeFont()" title="Fonte">
+            <option value="Inter">Inter</option>
+            <option value="Arial">Arial</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Courier New">Courier New</option>
+            <option value="Verdana">Verdana</option>
+            <option value="Roboto">Roboto</option>
+            <option value="Poppins">Poppins</option>
+            <option value="Montserrat">Montserrat</option>
+          </select>
+        </div>
+
+        <div class="toolbar-group">
+          <select id="font-size-select" onchange="changeFontSize()" title="Tamanho">
+            <option value="10">10</option>
+            <option value="12">12</option>
+            <option value="14">14</option>
+            <option value="16" selected>16</option>
+            <option value="18">18</option>
+            <option value="20">20</option>
+            <option value="24">24</option>
+            <option value="28">28</option>
+            <option value="32">32</option>
+            <option value="36">36</option>
+            <option value="40">40</option>
+            <option value="48">48</option>
+            <option value="56">56</option>
+            <option value="64">64</option>
+            <option value="72">72</option>
+          </select>
+        </div>
+
+        <div class="toolbar-group">
+          <button class="toolbar-btn" onclick="transformText('uppercase')" title="MAIÚSCULO"><i class="fas fa-font"></i><sup>A</sup></button>
+          <button class="toolbar-btn" onclick="transformText('lowercase')" title="minúsculo"><i class="fas fa-font"></i><sub>a</sub></button>
+          <button class="toolbar-btn" onclick="transformText('capitalize')" title="Primeira Letra Maiúscula"><i class="fas fa-font"></i><span style="font-size:0.6rem;">Aa</span></button>
+        </div>
+
+<div class="toolbar-group" style="margin-left:auto;border-right:none;">
+  <span id="save-indicator" class="save-indicator">
+    <i class="fas fa-check-circle" style="color:#00b894;"></i>
+    <span>Salvo</span>
+  </span>
+</div>
+      </div>
+
+      <div id="note-search-bar" style="display:none;">
+        <i class="fas fa-search"></i>
+        <input type="text" id="note-search-input" placeholder="Buscar na nota..." oninput="searchInNote()">
+        <button onclick="clearNoteSearch()" title="Fechar busca"><i class="fas fa-times"></i></button>
+      </div>
+
+      <div id="note-content" contenteditable="true" placeholder="Escreva suas notas aqui..." oninput="saveNoteOnChange()"></div>
+
+      <div id="note-stats">
+        <div class="stats-left">
+          <span id="word-count">Palavras: 0</span>
+          <span id="char-count">Caracteres: 0</span>
+        </div>
+        <div class="stats-right">
+          <span id="created-date"></span>
+          <span id="edited-date"></span>
+        </div>
+      </div>
+
+      <div class="emoji-container">
+        <div class="emoji-controls">
+          <div class="emoji-search">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Buscar emoji..." class="emoji-search-input" id="emoji-search">
+          </div>
+          <div class="emoji-categories">
             <button class="emoji-category active" data-category="all">Todos</button>
-            <button class="emoji-category" data-category="faces">Carinhas</button>
-            <button class="emoji-category" data-category="symbols">Símbolos</button>
-            <button class="emoji-category" data-category="objects">Objetos</button>
-            <button class="emoji-category" data-category="nature">Natureza</button>
+            <button class="emoji-category" data-category="faces"><i class="fas fa-smile"></i></button>
+            <button class="emoji-category" data-category="symbols"><i class="fas fa-hashtag"></i></button>
+            <button class="emoji-category" data-category="objects"><i class="fas fa-cube"></i></button>
+            <button class="emoji-category" data-category="nature"><i class="fas fa-leaf"></i></button>
+          </div>
         </div>
+        <div class="emoji-grid" id="emoji-grid"></div>
+      </div>
+
+      <div id="note-buttons">
+        <button class="btn-primary" onclick="showNoteDialog()">
+          <i class="fas fa-save"></i>
+          <span>Salvar</span>
+        </button>
+        <button class="btn-secondary" onclick="clearNote()">
+          <i class="fas fa-times"></i>
+          <span>Fechar</span>
+        </button>
+      </div>
+<div id="image-context-menu" class="image-context-menu" style="display:none;">
+  <button onclick="removeImage()"><i class="fas fa-trash"></i> Remover</button>
+  <button onclick="copyImage()"><i class="fas fa-copy"></i> Copiar</button>
+  <button onclick="cropImage()"><i class="fas fa-crop"></i> Cortar</button>
+  <button onclick="showResizeControls()"><i class="fas fa-expand"></i> Redimensionar</button>
+  <button onclick="resizeImage(1.2)"><i class="fas fa-plus"></i> Aumentar 20%</button>
+  <button onclick="resizeImage(0.8)"><i class="fas fa-minus"></i> Diminuir 20%</button>
+  <button onclick="resizeImage(1)"><i class="fas fa-undo"></i> Redefinir</button>
+</div>
     </div>
-    <div class="emoji-grid" id="emoji-grid">
-        <!-- Emojis serão adicionados dinamicamente via JavaScript -->
-    </div>
+  </main>
 </div>
 
-<div id="note-buttons">
-<button class="salvar-button" onclick="showNoteDialog()">
-  <i class="fa-solid fa-floppy-disk"></i>
-  <span>Salvar</span>
-</button>
-<button class="fechar-button" onclick="clearNote()">
-  <i class="fa-solid fa-xmark"></i>
-  <span>Fechar</span>
-</button>
-</div>
-</div>
-
-<div id="note-list">
-<h2>Suas Notas</h2>
-<div id="saved-notes"></div>
-</div>
-</div>
-</div>
-
-<!-- Modal para salvar nota -->
 <div id="note-dialog" class="modal">
   <div class="modal-content">
-    <button class="close-modal" onclick="closeNoteDialog()" title="Fechar">
+    <button class="close-modal" onclick="closeNoteDialog()">
+      <i class="fas fa-times"></i>
     </button>
-
-    <h2>Salvar Nota</h2>
-
-    <input
-      type="text"
-      id="note-name"
-      placeholder="Insira um nome para a sua nota..."
-    >
-
-    <button class="salvar-button" onclick="saveNote()">
-      <i class="fa-solid fa-floppy-disk"></i>
+    <h2><i class="fas fa-save"></i> Salvar Nota</h2>
+    <input type="text" id="note-name" placeholder="Insira um nome para a sua nota...">
+    
+    <div class="modal-tags-container">
+      <div class="tag-input-group">
+        <input type="text" id="note-tags-input" placeholder="Adicionar tag..." style="flex:1;margin-bottom:0;">
+        <div class="tag-color-picker-wrapper">
+          <button class="tag-color-btn" onclick="toggleTagColorPicker('new')" title="Escolher cor da tag">
+            <span class="tag-color-preview" id="new-tag-color-preview" style="background:#e74c3c;"></span>
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="tag-color-popover" id="new-tag-color-popover" style="display:none;">
+            <div class="tag-color-options">
+              <button class="tag-color-option active" data-color="#e74c3c" style="background:#e74c3c" onclick="selectTagColorNew(this)"></button>
+              <button class="tag-color-option" data-color="#3498db" style="background:#3498db" onclick="selectTagColorNew(this)"></button>
+              <button class="tag-color-option" data-color="#f39c12" style="background:#f39c12" onclick="selectTagColorNew(this)"></button>
+              <button class="tag-color-option" data-color="#9b59b6" style="background:#9b59b6" onclick="selectTagColorNew(this)"></button>
+              <button class="tag-color-option" data-color="#1abc9c" style="background:#1abc9c" onclick="selectTagColorNew(this)"></button>
+              <button class="tag-color-option" data-color="#e67e22" style="background:#e67e22" onclick="selectTagColorNew(this)"></button>
+              <button class="tag-color-option" data-color="#2ecc71" style="background:#2ecc71" onclick="selectTagColorNew(this)"></button>
+              <button class="tag-color-option" data-color="#1a6d5e" style="background:#1a6d5e" onclick="selectTagColorNew(this)"></button>
+            </div>
+          </div>
+        </div>
+        <button class="btn-tag-add" onclick="addTagToNew()"><i class="fas fa-plus"></i></button>
+      </div>
+      <div class="tag-list" id="new-tag-list"></div>
+    </div>
+    
+    <div class="color-picker">
+      <span>Cor da nota:</span>
+      <button class="color-option active" data-color="#1a6d5e" style="background:#1a6d5e" onclick="selectColorNew(this)"></button>
+      <button class="color-option" data-color="#e74c3c" style="background:#e74c3c" onclick="selectColorNew(this)"></button>
+      <button class="color-option" data-color="#3498db" style="background:#3498db" onclick="selectColorNew(this)"></button>
+      <button class="color-option" data-color="#f39c12" style="background:#f39c12" onclick="selectColorNew(this)"></button>
+      <button class="color-option" data-color="#9b59b6" style="background:#9b59b6" onclick="selectColorNew(this)"></button>
+      <button class="color-option" data-color="#1abc9c" style="background:#1abc9c" onclick="selectColorNew(this)"></button>
+      <button class="color-option" data-color="#e67e22" style="background:#e67e22" onclick="selectColorNew(this)"></button>
+      <button class="color-option" data-color="#2ecc71" style="background:#2ecc71" onclick="selectColorNew(this)"></button>
+    </div>
+    <button class="btn-primary" onclick="saveNote()">
+      <i class="fas fa-check"></i>
       <span>Salvar</span>
     </button>
   </div>
 </div>
 
-
 <div id="edit-modal" class="modal">
   <div class="modal-content">
-    <button class="close-modal" onclick="closeModal('edit-modal')" title="Fechar">
+    <button class="close-modal" onclick="closeModal('edit-modal')">
+      <i class="fas fa-times"></i>
     </button>
+    <h2 class="modal-title"><i class="fas fa-pen"></i> Editar Nota</h2>
+    <input type="text" id="edit-note-name" class="modal-input" placeholder="Novo nome para a nota">
+    
+    <div class="modal-tags-container">
+      <div class="tag-input-group">
+        <input type="text" id="edit-note-tags" class="modal-input" placeholder="Adicionar tag..." style="flex:1;margin-bottom:0;">
+        <div class="tag-color-picker-wrapper">
+          <button class="tag-color-btn" onclick="toggleTagColorPicker('edit')" title="Escolher cor da tag">
+            <span class="tag-color-preview" id="edit-tag-color-preview" style="background:#e74c3c;"></span>
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="tag-color-popover" id="edit-tag-color-popover" style="display:none;">
+            <div class="tag-color-options">
+              <button class="tag-color-option active" data-color="#e74c3c" style="background:#e74c3c" onclick="selectTagColorEdit(this)"></button>
+              <button class="tag-color-option" data-color="#3498db" style="background:#3498db" onclick="selectTagColorEdit(this)"></button>
+              <button class="tag-color-option" data-color="#f39c12" style="background:#f39c12" onclick="selectTagColorEdit(this)"></button>
+              <button class="tag-color-option" data-color="#9b59b6" style="background:#9b59b6" onclick="selectTagColorEdit(this)"></button>
+              <button class="tag-color-option" data-color="#1abc9c" style="background:#1abc9c" onclick="selectTagColorEdit(this)"></button>
+              <button class="tag-color-option" data-color="#e67e22" style="background:#e67e22" onclick="selectTagColorEdit(this)"></button>
+              <button class="tag-color-option" data-color="#2ecc71" style="background:#2ecc71" onclick="selectTagColorEdit(this)"></button>
+              <button class="tag-color-option" data-color="#1a6d5e" style="background:#1a6d5e" onclick="selectTagColorEdit(this)"></button>
+            </div>
+          </div>
+        </div>
+        <button class="btn-tag-add" onclick="addTagToEdit()"><i class="fas fa-plus"></i></button>
+      </div>
+      <div class="tag-list" id="edit-tag-list"></div>
+    </div>
+    
+    <div class="color-picker">
+      <span>Cor da nota:</span>
+      <button class="color-option active" data-color="#1a6d5e" style="background:#1a6d5e" onclick="selectColor(this)"></button>
+      <button class="color-option" data-color="#e74c3c" style="background:#e74c3c" onclick="selectColor(this)"></button>
+      <button class="color-option" data-color="#3498db" style="background:#3498db" onclick="selectColor(this)"></button>
+      <button class="color-option" data-color="#f39c12" style="background:#f39c12" onclick="selectColor(this)"></button>
+      <button class="color-option" data-color="#9b59b6" style="background:#9b59b6" onclick="selectColor(this)"></button>
+      <button class="color-option" data-color="#1abc9c" style="background:#1abc9c" onclick="selectColor(this)"></button>
+      <button class="color-option" data-color="#e67e22" style="background:#e67e22" onclick="selectColor(this)"></button>
+      <button class="color-option" data-color="#2ecc71" style="background:#2ecc71" onclick="selectColor(this)"></button>
+    </div>
+    <button class="btn-primary" onclick="confirmEditNote()">
+      <i class="fas fa-check"></i>
+      <span>Salvar</span>
+    </button>
+  </div>
+</div>
 
-    <h2 class="modal-title">Editar Nome da Nota</h2>
-
-    <input
-      type="text"
-      id="edit-note-name"
-      class="modal-input"
-      placeholder="Novo nome para a nota"
-    >
-
+<div id="delete-modal" class="modal">
+  <div class="modal-content">
+    <button class="close-modal" onclick="closeModal('delete-modal')">
+      <i class="fas fa-times"></i>
+    </button>
+    <h2 class="modal-title"><i class="fas fa-trash"></i> Confirmar Exclusão</h2>
+    <p>Tem certeza que deseja excluir esta nota?</p>
     <div class="modal-buttons">
-      <button class="modal-button confirm" onclick="confirmEditNote()">
-        <i class="fa-solid fa-pen-to-square"></i>
-        <span>Salvar</span>
+      <button class="btn-danger" onclick="confirmDeleteNote()">
+        <i class="fas fa-trash"></i>
+        <span>Excluir</span>
+      </button>
+      <button class="btn-secondary" onclick="closeModal('delete-modal')">
+        <i class="fas fa-times"></i>
+        <span>Cancelar</span>
       </button>
     </div>
   </div>
 </div>
 
-
-<div id="delete-modal" class="modal">
-    <div class="modal-content">
-        <button class="close-modal" onclick="closeModal('delete-modal')"></button>
-        <h2 class="modal-title">Confirmar Exclusão</h2>
-        <p>Tem certeza que deseja excluir esta nota?</p>
-        <div class="modal-buttons">
-            <button class="modal-button-excluir confirm" onclick="confirmDeleteNote()">Sim</button>
-        </div>
-    </div>
+<div id="link-modal" class="modal">
+  <div class="modal-content">
+    <button class="close-modal" onclick="closeModal('link-modal')">
+      <i class="fas fa-times"></i>
+    </button>
+    <h2><i class="fas fa-link"></i> Inserir Link</h2>
+    <input type="text" id="link-url" placeholder="URL do link...">
+    <input type="text" id="link-text" placeholder="Texto do link (opcional)...">
+    <p style="font-size:0.8rem;color:var(--text-muted);margin-top:-8px;margin-bottom:12px;">
+      <i class="fas fa-info-circle"></i> Selecione um texto na nota primeiro, ou preencha o campo acima.
+    </p>
+    <button class="btn-primary" onclick="confirmLink()">
+      <i class="fas fa-check"></i>
+      <span>Inserir</span>
+    </button>
+  </div>
 </div>
 
+<div id="attachment-modal" class="modal">
+  <div class="modal-content">
+    <button class="close-modal" onclick="closeModal('attachment-modal')">
+      <i class="fas fa-times"></i>
+    </button>
+    <h2><i class="fas fa-paperclip"></i> Anexar Arquivo</h2>
+    <input type="file" id="file-input" onchange="handleFileUpload(event)">
+    <button class="btn-primary" onclick="closeModal('attachment-modal')">
+      <i class="fas fa-check"></i>
+      <span>Concluir</span>
+    </button>
+  </div>
+</div>
+
+<div id="notification" class="notification-modal"></div>
+
 <script src="js/script.js"></script>
-
-<!-- Modal de notificação -->
-<div id="notification" class="notification-modal"></div></body>
+</body>
 </html>
-
