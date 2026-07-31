@@ -1989,6 +1989,15 @@ function handleFileUpload(event) {
   reader.readAsDataURL(file);
 }
 
+
+function toggleToolbar() {
+  var toolbar = document.getElementById('editor-toolbar');
+  var btn = document.getElementById('toolbar-toggle');
+  
+  toolbar.classList.toggle('open');
+  btn.classList.toggle('active');
+}
+
 function showContextMenu(x, y) {
   var menu = document.getElementById('image-context-menu');
   menu.style.display = 'block';

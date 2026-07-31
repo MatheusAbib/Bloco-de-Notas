@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -99,6 +99,9 @@
     </header>
 
     <div id="editor-area">
+    <button id="toolbar-toggle" class="toolbar-toggle" onclick="toggleToolbar()" title="Ferramentas">
+  <i class="fas fa-ellipsis-v"></i>
+</button>
 <div id="editor-toolbar">
   <div class="toolbar-group">
     <button class="toolbar-btn" data-command="bold" title="Negrito (Ctrl+B)"><i class="fas fa-bold"></i></button>
