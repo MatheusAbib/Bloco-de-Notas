@@ -326,6 +326,7 @@ const Placeholder = Extension.create({
 
   addProseMirrorPlugins() {
     const options = this.options
+    const extensionThis = this
 
     return [
       new Plugin({
@@ -333,7 +334,7 @@ const Placeholder = Extension.create({
         props: {
           decorations(state) {
             const doc = state.doc
-            const isEditable = this.editor && this.editor.isEditable
+            const isEditable = extensionThis.editor && extensionThis.editor.isEditable
 
             if (
               doc.childCount === 1 &&
