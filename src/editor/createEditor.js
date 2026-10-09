@@ -6,6 +6,7 @@ export function createEditor({ element, content = '', onUpdate, onSelectionChang
     element,
     extensions: buildExtensions(),
     content,
+    editable: false,
     editorProps: {
       attributes: {
         spellcheck: 'false'

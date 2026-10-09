@@ -165,6 +165,10 @@ export function getCurrentNote() {
   return notes.find((n) => n.id === id) || null
 }
 
+export function hasCurrentNote() {
+  return !!state.get('currentNoteId')
+}
+
 export function updateSaveIndicator(status, message) {
   const indicator = document.getElementById('save-indicator')
   if (!indicator) return

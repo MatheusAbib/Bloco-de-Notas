@@ -319,7 +319,8 @@ const Placeholder = Extension.create({
 
   addOptions() {
     return {
-      placeholder: 'Escreva suas notas aqui...'
+      emptyNote: 'Escreva suas notas aqui...',
+      noNote: 'Crie ou abra uma nota para poder digitar'
     }
   },
 
@@ -332,16 +333,19 @@ const Placeholder = Extension.create({
         props: {
           decorations(state) {
             const doc = state.doc
+            const isEditable = this.editor && this.editor.isEditable
+
             if (
               doc.childCount === 1 &&
               doc.firstChild &&
               doc.firstChild.isTextblock &&
               doc.firstChild.content.size === 0
             ) {
+              const text = isEditable ? options.emptyNote : options.noNote
               const firstChild = doc.firstChild
               const deco = Decoration.node(0, firstChild.nodeSize, {
                 class: 'is-editor-empty',
-                'data-placeholder': options.placeholder
+                'data-placeholder': text
               })
               return DecorationSet.create(doc, [deco])
             }
@@ -388,7 +392,8 @@ export function buildExtensions() {
     Attachment,
     Indent,
     Placeholder.configure({
-      placeholder: 'Escreva suas notas aqui...'
+      emptyNote: 'Escreva suas notas aqui...',
+      noNote: 'Crie ou abra uma nota para poder digitar'
     })
   ]
 }

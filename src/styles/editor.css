@@ -374,6 +374,22 @@
   outline-offset: 2px;
 }
 
+#editor-toolbar.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  user-select: none;
+}
+
+#editor[contenteditable='false'] .ProseMirror,
+#editor .ProseMirror[contenteditable='false'] {
+  cursor: default;
+}
+
+#editor .ProseMirror[contenteditable='false'] .is-editor-empty::before {
+  font-style: italic;
+  opacity: 0.8;
+}
+
 #note-stats {
   display: flex;
   flex-direction: column;

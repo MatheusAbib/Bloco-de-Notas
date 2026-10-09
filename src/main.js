@@ -28,6 +28,7 @@ import {
   saveCurrentNote,
   closeCurrentNote
 } from './notes/notes.js'
+import state from './core/state.js'
 import { initFilters } from './notes/filters.js'
 import { initBatch } from './notes/batch.js'
 import { formatDateTime } from './utils/dates.js'
@@ -55,6 +56,7 @@ async function init() {
 
   bindToolbar(editor)
   initSidebar(editor)
+  initEditorStateBinding(editor)
   initDialog(editor)
   initEditDialog()
   initLinkDialog(editor)
@@ -77,6 +79,34 @@ async function init() {
   window.__editor = editor
 
   console.log('Bloco de Notas v2 — pronto')
+}
+
+function initEditorStateBinding(editor) {
+  const updateEditorState = () => {
+    const hasNote = !!state.get('currentNoteId')
+
+    editor.setEditable(hasNote)
+
+    const noteButtons = document.getElementById('note-buttons')
+    if (noteButtons) {
+      noteButtons.style.display = hasNote ? 'flex' : 'none'
+    }
+
+    const toolbar = document.getElementById('editor-toolbar')
+    if (toolbar) {
+      if (!hasNote) {
+        toolbar.classList.add('disabled')
+      } else {
+        toolbar.classList.remove('disabled')
+      }
+    }
+
+    editor.view.dispatch(editor.state.tr)
+  }
+
+  state.subscribe('currentNoteId', updateEditorState)
+
+  updateEditorState()
 }
 
 function initActionButtons(editor) {
