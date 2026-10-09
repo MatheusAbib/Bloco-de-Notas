@@ -1,487 +1,323 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image" sizes="16x16" href="img/notepad.png">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;500;600;700&family=Lato:wght@300;400;700&family=Nunito:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Source+Code+Pro:wght@300;400;500;600;700&family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css">
-<title>Bloco de Notas</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/notepad.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;500;600;700&family=Lato:wght@300;400;700&family=Nunito:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Source+Code+Pro:wght@300;400;500;600;700&family=Oswald:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  />
+  <title>Bloco de Notas</title>
 </head>
 <body>
-
-<div id="app">
-  <aside id="sidebar">
-<div class="sidebar-header">
-  <i class="fas fa-sticky-note"></i>
-  <h2>Notas</h2>
-
-  <span class="note-count" id="note-count">0</span>
-</div>
-
-<div class="sidebar-actions">
-  <button class="multi-select-toggle" onclick="toggleMultiSelect()" title="Selecionar múltiplas notas">
-    <i class="fas fa-check-double"></i>
-  </button>
-    <button id="new-note-btn" class="icon-btn" onclick="createNewNote()" title="Nova Nota">
-    <i class="fas fa-plus"></i>
-  </button>
-  <div class="multi-select-actions" id="multi-select-actions" style="display:none;">
-    <button onclick="batchPin()" title="Fixar selecionadas"><i class="fas fa-thumbtack"></i></button>
-    <button id="batch-archive-btn" onclick="batchArchive()" title="Arquivar selecionadas"><i class="fas fa-archive"></i></button>
-    <button id="batch-unarchive-btn" onclick="batchUnarchive()" style="display:none;" title="Desarquivar selecionadas"><i class="fas fa-undo"></i></button>
-    <button onclick="batchDelete()" title="Excluir selecionadas" class="btn-danger"><i class="fas fa-trash"></i></button>
-    <span id="selected-count">0</span>
-  </div>
-</div>
-
-<div class="sidebar-tabs">
-  <button class="tab-btn active" data-tab="active" onclick="switchTab('active')">
-    <i class="fas fa-circle"></i> Ativas
-  </button>
-  <button class="tab-btn" data-tab="archived" onclick="switchTab('archived')">
-    <i class="fas fa-archive"></i> Arquivadas
-  </button>
-</div>
-
-<div class="sidebar-search">
-  <i class="fas fa-search search-icon"></i>
-  <input type="text" id="search-notes" placeholder="Buscar notas..." oninput="searchNotes()">
-  <button class="search-clear" onclick="clearSearch()" title="Limpar busca">
-    <i class="fas fa-times"></i>
-  </button>
-</div>
-<div class="sidebar-filters">
-  <div class="filter-group">
-    <select id="filter-tag" onchange="applyFilters()">
-      <option value="all">Todas as tags</option>
-    </select>
-  </div>
-  <div class="filter-group">
-    <select id="filter-date" onchange="applyFilters()">
-      <option value="all">Todas as datas</option>
-      <option value="today">Hoje</option>
-      <option value="week">Esta semana</option>
-      <option value="month">Este mês</option>
-    </select>
-  </div>
-  <button class="filter-clear hidden" onclick="clearFilters()" title="Limpar filtros">
-    <i class="fas fa-times"></i>
-  </button>
-</div>
-    <div id="note-list">
-      <div id="saved-notes"></div>
-    </div>
-  </aside>
-
-  <main id="main-content">
-    <header id="top-bar">
-      <div class="top-bar-left">
-        <button id="toggle-sidebar" class="icon-btn">
-          <i class="fas fa-bars"></i>
-        </button>
-        <h1 id="note-title-display">Bloco de Notas</h1>
+  <div id="app">
+    <aside id="sidebar">
+      <div class="sidebar-header">
+        <i class="fas fa-sticky-note"></i>
+        <h2>Notas</h2>
+        <span class="note-count" id="note-count">0</span>
       </div>
-      <div class="top-bar-right">
-        <button id="focus-mode-btn" class="icon-btn" onclick="toggleFocusMode()" title="Modo Foco">
-          <i class="fas fa-expand"></i>
+
+      <div class="sidebar-actions">
+        <button
+          class="icon-btn multi-select-toggle"
+          id="multi-select-toggle"
+          title="Selecionar múltiplas notas"
+        >
+          <i class="fas fa-check-double"></i>
         </button>
-        <button id="theme-toggle" class="icon-btn">
-          <i class="fas fa-moon"></i>
+        <button class="icon-btn" id="new-note-btn" title="Nova Nota">
+          <i class="fas fa-plus"></i>
+        </button>
+        <div class="multi-select-actions" id="multi-select-actions">
+          <button id="batch-pin-btn" title="Fixar selecionadas">
+            <i class="fas fa-thumbtack"></i>
+          </button>
+          <button id="batch-archive-btn" title="Arquivar selecionadas">
+            <i class="fas fa-archive"></i>
+          </button>
+          <button
+            id="batch-unarchive-btn"
+            title="Desarquivar selecionadas"
+            style="display: none"
+          >
+            <i class="fas fa-undo"></i>
+          </button>
+          <button id="batch-delete-btn" class="btn-danger" title="Excluir selecionadas">
+            <i class="fas fa-trash"></i>
+          </button>
+          <span id="selected-count">0</span>
+        </div>
+      </div>
+
+      <div class="sidebar-tabs">
+        <button class="tab-btn active" data-tab="active" id="tab-active">
+          <i class="fas fa-circle"></i> Ativas
+        </button>
+        <button class="tab-btn" data-tab="archived" id="tab-archived">
+          <i class="fas fa-archive"></i> Arquivadas
         </button>
       </div>
-    </header>
 
-    <div id="editor-area">
-    <button id="toolbar-toggle" class="toolbar-toggle" onclick="toggleToolbar()" title="Ferramentas">
-  <i class="fas fa-ellipsis-v"></i>
-</button>
-<div id="editor-toolbar">
-  <div class="toolbar-group">
-    <button class="toolbar-btn" data-command="bold" title="Negrito (Ctrl+B)"><i class="fas fa-bold"></i></button>
-    <button class="toolbar-btn" data-command="italic" title="Itálico (Ctrl+I)"><i class="fas fa-italic"></i></button>
-    <button class="toolbar-btn" data-command="underline" title="Sublinhado (Ctrl+U)"><i class="fas fa-underline"></i></button>
-    <button class="toolbar-btn" data-command="strikeThrough" title="Tachado"><i class="fas fa-strikethrough"></i></button>
-  </div>
-
-<div class="toolbar-group">
-  <button class="toolbar-btn" onclick="toggleHighlight()" title="Realce (marcador)"><i class="fas fa-highlighter"></i></button>
-</div>
-
-<div class="toolbar-group">
-  <button class="toolbar-btn" onclick="toggleFontColorMenu()" title="Cor da fonte"><i class="fas fa-font"></i></button>
-  <div class="color-picker-wrapper">
-    <button class="color-picker-btn" onclick="toggleColorPicker('font')" title="Cor da fonte">
-      <span class="color-preview" id="font-preview" style="background:#1a2a2a;"></span>
-      <i class="fas fa-chevron-down"></i>
-    </button>
-    <div class="color-popover" id="font-color-popover" style="display:none;">
-      <div class="color-grid">
-        <div class="color-section">
-          <span class="color-label">Cores</span>
-          <div class="color-options">
-            <button class="color-swatch" data-color="#1a2a2a" style="background:#1a2a2a;" onclick="selectFontColor(this)"></button>
-            <button class="color-swatch" data-color="#e74c3c" style="background:#e74c3c;" onclick="selectFontColor(this)"></button>
-            <button class="color-swatch" data-color="#e67e22" style="background:#e67e22;" onclick="selectFontColor(this)"></button>
-            <button class="color-swatch" data-color="#f1c40f" style="background:#f1c40f;" onclick="selectFontColor(this)"></button>
-            <button class="color-swatch" data-color="#2ecc71" style="background:#2ecc71;" onclick="selectFontColor(this)"></button>
-            <button class="color-swatch" data-color="#1abc9c" style="background:#1abc9c;" onclick="selectFontColor(this)"></button>
-            <button class="color-swatch" data-color="#3498db" style="background:#3498db;" onclick="selectFontColor(this)"></button>
-            <button class="color-swatch" data-color="#9b59b6" style="background:#9b59b6;" onclick="selectFontColor(this)"></button>
-            <button class="color-swatch" data-color="#34495e" style="background:#34495e;" onclick="selectFontColor(this)"></button>
-            <button class="color-swatch" data-color="#7f8c8d" style="background:#7f8c8d;" onclick="selectFontColor(this)"></button>
-          </div>
-        </div>
-        <div class="color-section">
-          <span class="color-label">Tons</span>
-          <div class="color-options">
-            <button class="color-swatch" data-color="#fadbd8" style="background:#fadbd8;" onclick="selectFontColor(this)"></button>
-            <button class="color-swatch" data-color="#f5cba7" style="background:#f5cba7;" onclick="selectFontColor(this)"></button>
-            <button class="color-swatch" data-color="#f9e79f" style="background:#f9e79f;" onclick="selectFontColor(this)"></button>
-            <button class="color-swatch" data-color="#a9dfbf" style="background:#a9dfbf;" onclick="selectFontColor(this)"></button>
-            <button class="color-swatch" data-color="#a3e4d7" style="background:#a3e4d7;" onclick="selectFontColor(this)"></button>
-            <button class="color-swatch" data-color="#aed6f1" style="background:#aed6f1;" onclick="selectFontColor(this)"></button>
-            <button class="color-swatch" data-color="#d7bde2" style="background:#d7bde2;" onclick="selectFontColor(this)"></button>
-            <button class="color-swatch" data-color="#aeb6bf" style="background:#aeb6bf;" onclick="selectFontColor(this)"></button>
-          </div>
-        </div>
-        <div class="color-section">
-          <span class="color-label">Sem cor</span>
-          <div class="color-options">
-            <button class="color-swatch" data-color="transparent" style="background:transparent;border:1px dashed #ccc;" onclick="selectFontColor(this)">✕</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-  <div class="toolbar-group">
-    <button class="toolbar-btn" data-command="insertUnorderedList" title="Lista"><i class="fas fa-list-ul"></i></button>
-    <button class="toolbar-btn" data-command="insertOrderedList" title="Lista numerada"><i class="fas fa-list-ol"></i></button>
-  </div>
-
-  <div class="toolbar-group">
-    <button class="toolbar-btn" id="insert-link-btn" title="Inserir link"><i class="fas fa-link"></i></button>
-    <button class="toolbar-btn" id="toggle-note-search-btn" title="Buscar na nota"><i class="fas fa-search"></i></button>
-    <button class="toolbar-btn" id="open-attachment-btn" title="Inserir imagem ou arquivo"><i class="fas fa-paperclip"></i></button>
-  </div>
-
-  <div class="toolbar-group">
-    <button class="toolbar-btn" id="undo-btn" title="Desfazer (Ctrl+Z)"><i class="fas fa-undo"></i></button>
-    <button class="toolbar-btn" id="redo-btn" title="Refazer (Ctrl+Y)"><i class="fas fa-redo"></i></button>
-  </div>
-
-  <div class="toolbar-group">
-<select id="font-select" title="Fonte">
-  <option value="Inter">Inter</option>
-  <option value="Arial">Arial</option>
-  <option value="Times New Roman">Times New Roman</option>
-  <option value="Georgia">Georgia</option>
-  <option value="Courier New">Courier New</option>
-  <option value="Verdana">Verdana</option>
-  <option value="Roboto">Roboto</option>
-  <option value="Poppins">Poppins</option>
-  <option value="Montserrat">Montserrat</option>
-  <option value="Open Sans">Open Sans</option>
-  <option value="Lato">Lato</option>
-  <option value="Nunito">Nunito</option>
-  <option value="Playfair Display">Playfair Display</option>
-  <option value="Source Code Pro">Source Code Pro</option>
-  <option value="Oswald">Oswald</option>
-</select>
-  </div>
-
-  <div class="toolbar-group">
-    <select id="font-size-select" title="Tamanho">
-      <option value="10">10</option>
-      <option value="12">12</option>
-      <option value="14">14</option>
-      <option value="16" selected>16</option>
-      <option value="18">18</option>
-      <option value="20">20</option>
-      <option value="24">24</option>
-      <option value="28">28</option>
-      <option value="32">32</option>
-      <option value="36">36</option>
-      <option value="40">40</option>
-      <option value="48">48</option>
-      <option value="56">56</option>
-      <option value="64">64</option>
-      <option value="72">72</option>
-    </select>
-  </div>
-
-  <div class="toolbar-group">
-  <button class="toolbar-btn" onclick="formatText('justifyLeft')" title="Alinhar à esquerda"><i class="fas fa-align-left"></i></button>
-  <button class="toolbar-btn" onclick="formatText('justifyCenter')" title="Centralizar"><i class="fas fa-align-center"></i></button>
-  <button class="toolbar-btn" onclick="formatText('justifyRight')" title="Alinhar à direita"><i class="fas fa-align-right"></i></button>
-  <button class="toolbar-btn" onclick="formatText('justifyFull')" title="Justificar"><i class="fas fa-align-justify"></i></button>
-</div>
-
-<div class="toolbar-group">
-  <button class="toolbar-btn" onclick="formatText('indent')" title="Aumentar recuo"><i class="fas fa-indent"></i></button>
-  <button class="toolbar-btn" onclick="formatText('outdent')" title="Diminuir recuo"><i class="fas fa-outdent"></i></button>
-</div>
-
-  <div class="toolbar-group">
-    <button class="toolbar-btn" id="transform-uppercase" title="MAIÚSCULO"><i class="fas fa-font"></i><sup>A</sup></button>
-    <button class="toolbar-btn" id="transform-lowercase" title="minúsculo"><i class="fas fa-font"></i><sub>a</sub></button>
-    <button class="toolbar-btn" id="transform-capitalize" title="Primeira Letra Maiúscula"><i class="fas fa-font"></i><span style="font-size:0.6rem;">Aa</span></button>
-  </div>
-
-  <div class="toolbar-group" style="margin-left:auto;border-right:none;">
-    <span id="save-indicator" class="save-indicator">
-      <i class="fas fa-check-circle" style="color:#00b894;"></i>
-      <span>Salvo</span>
-    </span>
-  </div>
-</div>
-
-      <div id="note-search-bar" style="display:none;">
-        <i class="fas fa-search"></i>
-        <input type="text" id="note-search-input" placeholder="Buscar na nota..." oninput="searchInNote()">
-        <button onclick="clearNoteSearch()" title="Fechar busca"><i class="fas fa-times"></i></button>
-      </div>
-
-      <div id="note-content" contenteditable="true" placeholder="Escreva suas notas aqui..." oninput="saveNoteOnChange()"></div>
-
-      <div id="note-stats">
-        <div class="stats-left">
-          <span id="word-count">Palavras: 0</span>
-          <span id="char-count">Caracteres: 0</span>
-        </div>
-        <div class="stats-right">
-          <span id="created-date"></span>
-          <span id="edited-date"></span>
-        </div>
-      </div>
-
-      <div class="emoji-container">
-        <div class="emoji-controls">
-          <div class="emoji-search">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="Buscar emoji..." class="emoji-search-input" id="emoji-search">
-          </div>
-          <div class="emoji-categories">
-            <button class="emoji-category active" data-category="all">Todos</button>
-            <button class="emoji-category" data-category="faces"><i class="fas fa-smile"></i></button>
-            <button class="emoji-category" data-category="symbols"><i class="fas fa-hashtag"></i></button>
-            <button class="emoji-category" data-category="objects"><i class="fas fa-cube"></i></button>
-            <button class="emoji-category" data-category="nature"><i class="fas fa-leaf"></i></button>
-          </div>
-        </div>
-        <div class="emoji-grid" id="emoji-grid"></div>
-      </div>
-
-      <div id="note-buttons">
-        <button class="btn-primary" onclick="showNoteDialog()">
-          <i class="fas fa-save"></i>
-          <span>Salvar</span>
-        </button>
-        <button class="btn-secondary" onclick="clearNote()">
+      <div class="sidebar-search">
+        <i class="fas fa-search search-icon"></i>
+        <input
+          type="text"
+          id="search-notes"
+          placeholder="Buscar notas..."
+          autocomplete="off"
+        />
+        <button class="search-clear" id="search-clear" title="Limpar busca">
           <i class="fas fa-times"></i>
-          <span>Fechar</span>
         </button>
       </div>
-<div id="image-context-menu" class="image-context-menu" style="display:none;">
-  <button onclick="removeImage()"><i class="fas fa-trash"></i> Remover</button>
-  <button onclick="copyImage()"><i class="fas fa-copy"></i> Copiar</button>
-  <button onclick="cropImage()"><i class="fas fa-crop"></i> Cortar</button>
-  <button onclick="showResizeControls()"><i class="fas fa-expand"></i> Redimensionar</button>
-  <button onclick="resizeImage(1.2)"><i class="fas fa-plus"></i> Aumentar 20%</button>
-  <button onclick="resizeImage(0.8)"><i class="fas fa-minus"></i> Diminuir 20%</button>
-  <button onclick="resizeImage(1)"><i class="fas fa-undo"></i> Redefinir</button>
-</div>
-    </div>
-  </main>
-</div>
 
-<div id="note-dialog" class="modal">
-  <div class="modal-content">
-    <button class="close-modal" onclick="closeNoteDialog()">
-      <i class="fas fa-times"></i>
-    </button>
-    <h2><i class="fas fa-save"></i> Salvar Nota</h2>
-    <input type="text" id="note-name" placeholder="Insira um nome para a sua nota...">
-    
-    <div class="modal-tags-container">
-      <div class="tag-input-group">
-        <input type="text" id="note-tags-input" placeholder="Adicionar tag..." style="flex:1;margin-bottom:0;">
-        <div class="tag-color-picker-wrapper">
-          <button class="tag-color-btn" onclick="toggleTagColorPicker('new')" title="Escolher cor da tag">
-            <span class="tag-color-preview" id="new-tag-color-preview" style="background:#e74c3c;"></span>
-            <i class="fas fa-chevron-down"></i>
+      <div class="sidebar-filters">
+        <div class="filter-group">
+          <select id="filter-tag">
+            <option value="all">Todas as tags</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <select id="filter-date">
+            <option value="all">Todas as datas</option>
+            <option value="today">Hoje</option>
+            <option value="week">Esta semana</option>
+            <option value="month">Este mês</option>
+          </select>
+        </div>
+        <button class="filter-clear hidden" id="filter-clear" title="Limpar filtros">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div id="note-list">
+        <div id="saved-notes"></div>
+      </div>
+    </aside>
+
+    <main id="main-content">
+      <header id="top-bar">
+        <div class="top-bar-left">
+          <button id="toggle-sidebar" class="icon-btn">
+            <i class="fas fa-bars"></i>
           </button>
-          <div class="tag-color-popover" id="new-tag-color-popover" style="display:none;">
-            <div class="tag-color-options">
-              <button class="tag-color-option active" data-color="#e74c3c" style="background:#e74c3c" onclick="selectTagColorNew(this)"></button>
-              <button class="tag-color-option" data-color="#3498db" style="background:#3498db" onclick="selectTagColorNew(this)"></button>
-              <button class="tag-color-option" data-color="#f39c12" style="background:#f39c12" onclick="selectTagColorNew(this)"></button>
-              <button class="tag-color-option" data-color="#9b59b6" style="background:#9b59b6" onclick="selectTagColorNew(this)"></button>
-              <button class="tag-color-option" data-color="#1abc9c" style="background:#1abc9c" onclick="selectTagColorNew(this)"></button>
-              <button class="tag-color-option" data-color="#e67e22" style="background:#e67e22" onclick="selectTagColorNew(this)"></button>
-              <button class="tag-color-option" data-color="#2ecc71" style="background:#2ecc71" onclick="selectTagColorNew(this)"></button>
-              <button class="tag-color-option" data-color="#1a6d5e" style="background:#1a6d5e" onclick="selectTagColorNew(this)"></button>
-            </div>
+          <h1 id="note-title-display">Bloco de Notas</h1>
+        </div>
+        <div class="top-bar-right">
+          <button
+            id="toolbar-toggle"
+            class="icon-btn toolbar-toggle-topbar"
+            title="Ferramentas"
+          >
+            <i class="fas fa-ellipsis-v"></i>
+          </button>
+          <button
+            id="focus-mode-btn"
+            class="icon-btn"
+            title="Modo Foco"
+          >
+            <i class="fas fa-expand"></i>
+          </button>
+          <button id="theme-toggle" class="icon-btn" title="Alternar tema">
+            <i class="fas fa-moon"></i>
+          </button>
+        </div>
+      </header>
+
+      <div id="editor-area">
+        <div id="editor-toolbar">
+          <div class="toolbar-group">
+            <button class="toolbar-btn" data-command="bold" title="Negrito (Ctrl+B)">
+              <i class="fas fa-bold"></i>
+            </button>
+            <button class="toolbar-btn" data-command="italic" title="Itálico (Ctrl+I)">
+              <i class="fas fa-italic"></i>
+            </button>
+            <button class="toolbar-btn" data-command="underline" title="Sublinhado (Ctrl+U)">
+              <i class="fas fa-underline"></i>
+            </button>
+            <button class="toolbar-btn" data-command="strike" title="Tachado">
+              <i class="fas fa-strikethrough"></i>
+            </button>
+          </div>
+
+          <div class="toolbar-group">
+            <button class="toolbar-btn" data-command="highlight" title="Realce">
+              <i class="fas fa-highlighter"></i>
+            </button>
+          </div>
+
+          <div class="toolbar-group">
+            <input
+              type="color"
+              id="font-color-picker"
+              value="#1a2a2a"
+              title="Cor da fonte"
+            />
+          </div>
+
+          <div class="toolbar-group">
+            <button class="toolbar-btn" data-command="bulletList" title="Lista">
+              <i class="fas fa-list-ul"></i>
+            </button>
+            <button class="toolbar-btn" data-command="orderedList" title="Lista numerada">
+              <i class="fas fa-list-ol"></i>
+            </button>
+            <button class="toolbar-btn" data-command="taskList" title="Checklist">
+              <i class="fas fa-tasks"></i>
+            </button>
+          </div>
+
+          <div class="toolbar-group">
+            <button class="toolbar-btn" data-command="link" title="Inserir link">
+              <i class="fas fa-link"></i>
+            </button>
+            <button class="toolbar-btn" data-command="image" title="Inserir imagem">
+              <i class="fas fa-image"></i>
+            </button>
+            <button class="toolbar-btn" data-command="attachment" title="Anexar arquivo">
+              <i class="fas fa-paperclip"></i>
+            </button>
+          </div>
+
+          <div class="toolbar-group">
+            <button class="toolbar-btn" data-command="emoji" title="Inserir emoji">
+              <i class="fas fa-face-smile"></i>
+            </button>
+          </div>
+
+          <div class="toolbar-group">
+            <button class="toolbar-btn" data-command="undo" title="Desfazer (Ctrl+Z)">
+              <i class="fas fa-undo"></i>
+            </button>
+            <button class="toolbar-btn" data-command="redo" title="Refazer (Ctrl+Y)">
+              <i class="fas fa-redo"></i>
+            </button>
+          </div>
+
+          <div class="toolbar-group">
+            <select id="font-family-select" title="Fonte">
+              <option value="Inter">Inter</option>
+              <option value="Arial">Arial</option>
+              <option value="Georgia">Georgia</option>
+              <option value="Times New Roman">Times New Roman</option>
+              <option value="Courier New">Courier New</option>
+              <option value="Verdana">Verdana</option>
+              <option value="Roboto">Roboto</option>
+              <option value="Poppins">Poppins</option>
+              <option value="Montserrat">Montserrat</option>
+              <option value="Open Sans">Open Sans</option>
+              <option value="Lato">Lato</option>
+              <option value="Nunito">Nunito</option>
+              <option value="Playfair Display">Playfair Display</option>
+              <option value="Source Code Pro">Source Code Pro</option>
+              <option value="Oswald">Oswald</option>
+            </select>
+          </div>
+
+          <div class="toolbar-group">
+            <select id="font-size-select" title="Tamanho">
+              <option value="12px">12</option>
+              <option value="14px">14</option>
+              <option value="16px" selected>16</option>
+              <option value="18px">18</option>
+              <option value="20px">20</option>
+              <option value="24px">24</option>
+              <option value="28px">28</option>
+              <option value="32px">32</option>
+              <option value="40px">40</option>
+              <option value="48px">48</option>
+              <option value="64px">64</option>
+            </select>
+          </div>
+
+          <div class="toolbar-group">
+            <button class="toolbar-btn" data-command="align-left" title="Alinhar à esquerda">
+              <i class="fas fa-align-left"></i>
+            </button>
+            <button class="toolbar-btn" data-command="align-center" title="Centralizar">
+              <i class="fas fa-align-center"></i>
+            </button>
+            <button class="toolbar-btn" data-command="align-right" title="Alinhar à direita">
+              <i class="fas fa-align-right"></i>
+            </button>
+            <button class="toolbar-btn" data-command="align-justify" title="Justificar">
+              <i class="fas fa-align-justify"></i>
+            </button>
+          </div>
+
+          <div class="toolbar-group">
+            <button class="toolbar-btn" data-command="outdent" title="Diminuir recuo">
+              <i class="fas fa-outdent"></i>
+            </button>
+            <button class="toolbar-btn" data-command="indent" title="Aumentar recuo">
+              <i class="fas fa-indent"></i>
+            </button>
+          </div>
+
+          <div class="toolbar-group">
+            <button class="toolbar-btn" data-command="uppercase" title="MAIÚSCULO">
+              <i class="fas fa-font"></i><sup>A</sup>
+            </button>
+            <button class="toolbar-btn" data-command="lowercase" title="minúsculo">
+              <i class="fas fa-font"></i><sub>a</sub>
+            </button>
+            <button class="toolbar-btn" data-command="capitalize" title="Primeira Letra Maiúscula">
+              <i class="fas fa-font"></i><span class="case-preview">Aa</span>
+            </button>
+          </div>
+
+          <div class="toolbar-group toolbar-group-last">
+            <span id="save-indicator" class="save-indicator">
+              <i class="fas fa-check-circle"></i>
+              <span>Salvo</span>
+            </span>
           </div>
         </div>
-        <button class="btn-tag-add" onclick="addTagToNew()"><i class="fas fa-plus"></i></button>
-      </div>
-      <div class="tag-list" id="new-tag-list"></div>
-    </div>
-    
-    <div class="color-picker">
-      <span>Cor da nota:</span>
-      <button class="color-option active" data-color="#1a6d5e" style="background:#1a6d5e" onclick="selectColorNew(this)"></button>
-      <button class="color-option" data-color="#e74c3c" style="background:#e74c3c" onclick="selectColorNew(this)"></button>
-      <button class="color-option" data-color="#3498db" style="background:#3498db" onclick="selectColorNew(this)"></button>
-      <button class="color-option" data-color="#f39c12" style="background:#f39c12" onclick="selectColorNew(this)"></button>
-      <button class="color-option" data-color="#9b59b6" style="background:#9b59b6" onclick="selectColorNew(this)"></button>
-      <button class="color-option" data-color="#1abc9c" style="background:#1abc9c" onclick="selectColorNew(this)"></button>
-      <button class="color-option" data-color="#e67e22" style="background:#e67e22" onclick="selectColorNew(this)"></button>
-      <button class="color-option" data-color="#2ecc71" style="background:#2ecc71" onclick="selectColorNew(this)"></button>
-    </div>
-    <button class="btn-primary" onclick="saveNote()">
-      <i class="fas fa-check"></i>
-      <span>Salvar</span>
-    </button>
-  </div>
-</div>
 
-<div id="edit-modal" class="modal">
-  <div class="modal-content">
-    <button class="close-modal" onclick="closeModal('edit-modal')">
-      <i class="fas fa-times"></i>
-    </button>
-    <h2 class="modal-title"><i class="fas fa-pen"></i> Editar Nota</h2>
-    <input type="text" id="edit-note-name" class="modal-input" placeholder="Novo nome para a nota">
-    
-    <div class="modal-tags-container">
-      <div class="tag-input-group">
-        <input type="text" id="edit-note-tags" class="modal-input" placeholder="Adicionar tag..." style="flex:1;margin-bottom:0;">
-        <div class="tag-color-picker-wrapper">
-          <button class="tag-color-btn" onclick="toggleTagColorPicker('edit')" title="Escolher cor da tag">
-            <span class="tag-color-preview" id="edit-tag-color-preview" style="background:#e74c3c;"></span>
-            <i class="fas fa-chevron-down"></i>
+        <div id="note-search-bar" style="display:none;">
+          <i class="fas fa-search"></i>
+          <input type="text" id="note-search-input" placeholder="Buscar na nota..." autocomplete="off" />
+          <button type="button" title="Fechar busca">
+            <i class="fas fa-times"></i>
           </button>
-          <div class="tag-color-popover" id="edit-tag-color-popover" style="display:none;">
-            <div class="tag-color-options">
-              <button class="tag-color-option active" data-color="#e74c3c" style="background:#e74c3c" onclick="selectTagColorEdit(this)"></button>
-              <button class="tag-color-option" data-color="#3498db" style="background:#3498db" onclick="selectTagColorEdit(this)"></button>
-              <button class="tag-color-option" data-color="#f39c12" style="background:#f39c12" onclick="selectTagColorEdit(this)"></button>
-              <button class="tag-color-option" data-color="#9b59b6" style="background:#9b59b6" onclick="selectTagColorEdit(this)"></button>
-              <button class="tag-color-option" data-color="#1abc9c" style="background:#1abc9c" onclick="selectTagColorEdit(this)"></button>
-              <button class="tag-color-option" data-color="#e67e22" style="background:#e67e22" onclick="selectTagColorEdit(this)"></button>
-              <button class="tag-color-option" data-color="#2ecc71" style="background:#2ecc71" onclick="selectTagColorEdit(this)"></button>
-              <button class="tag-color-option" data-color="#1a6d5e" style="background:#1a6d5e" onclick="selectTagColorEdit(this)"></button>
-            </div>
+        </div>
+
+        <div id="editor"></div>
+
+        <div id="note-stats">
+          <div class="stats-left">
+            <span id="word-count">Palavras: 0</span>
+            <span id="char-count">Caracteres: 0</span>
+          </div>
+          <div class="stats-right">
+            <span id="created-date"></span>
+            <span id="edited-date"></span>
           </div>
         </div>
-        <button class="btn-tag-add" onclick="addTagToEdit()"><i class="fas fa-plus"></i></button>
+
+        <div id="note-buttons">
+          <button class="btn btn-primary" id="save-note-btn">
+            <i class="fas fa-save"></i>
+            <span>Salvar</span>
+          </button>
+          <button class="btn btn-secondary" id="close-note-btn">
+            <i class="fas fa-times"></i>
+            <span>Fechar</span>
+          </button>
+        </div>
       </div>
-      <div class="tag-list" id="edit-tag-list"></div>
-    </div>
-    
-    <div class="color-picker">
-      <span>Cor da nota:</span>
-      <button class="color-option active" data-color="#1a6d5e" style="background:#1a6d5e" onclick="selectColor(this)"></button>
-      <button class="color-option" data-color="#e74c3c" style="background:#e74c3c" onclick="selectColor(this)"></button>
-      <button class="color-option" data-color="#3498db" style="background:#3498db" onclick="selectColor(this)"></button>
-      <button class="color-option" data-color="#f39c12" style="background:#f39c12" onclick="selectColor(this)"></button>
-      <button class="color-option" data-color="#9b59b6" style="background:#9b59b6" onclick="selectColor(this)"></button>
-      <button class="color-option" data-color="#1abc9c" style="background:#1abc9c" onclick="selectColor(this)"></button>
-      <button class="color-option" data-color="#e67e22" style="background:#e67e22" onclick="selectColor(this)"></button>
-      <button class="color-option" data-color="#2ecc71" style="background:#2ecc71" onclick="selectColor(this)"></button>
-    </div>
-    <button class="btn-primary" onclick="confirmEditNote()">
-      <i class="fas fa-check"></i>
-      <span>Salvar</span>
-    </button>
+    </main>
   </div>
-</div>
 
-<div id="delete-modal" class="modal">
-  <div class="modal-content">
-    <button class="close-modal" onclick="closeModal('delete-modal')">
-      <i class="fas fa-times"></i>
-    </button>
-    <h2 class="modal-title"><i class="fas fa-trash"></i> Confirmar Exclusão</h2>
-    <p>Tem certeza que deseja excluir esta nota?</p>
-    <div class="modal-buttons">
-      <button class="btn-danger" onclick="confirmDeleteNote()">
-        <i class="fas fa-trash"></i>
-        <span>Excluir</span>
-      </button>
-      <button class="btn-secondary" onclick="closeModal('delete-modal')">
-        <i class="fas fa-times"></i>
-        <span>Cancelar</span>
-      </button>
-    </div>
-  </div>
-</div>
-
-<div id="link-modal" class="modal">
-  <div class="modal-content">
-    <button class="close-modal" onclick="closeModal('link-modal')">
-      <i class="fas fa-times"></i>
-    </button>
-    <h2><i class="fas fa-link"></i> Inserir Link</h2>
-    <input type="text" id="link-url" placeholder="URL do link...">
-    <input type="text" id="link-text" placeholder="Texto do link (opcional)...">
-    <p style="font-size:0.8rem;color:var(--text-muted);margin-top:-8px;margin-bottom:12px;">
-      <i class="fas fa-info-circle"></i> Selecione um texto na nota primeiro, ou preencha o campo acima.
-    </p>
-    <button class="btn-primary" onclick="confirmLink()">
-      <i class="fas fa-check"></i>
-      <span>Inserir</span>
-    </button>
-  </div>
-</div>
-
-<div id="attachment-modal" class="modal">
-  <div class="modal-content">
-    <button class="close-modal" onclick="closeModal('attachment-modal')">
-      <i class="fas fa-times"></i>
-    </button>
-    <h2><i class="fas fa-paperclip"></i> Anexar Arquivo</h2>
-    <input type="file" id="file-input" onchange="handleFileUpload(event)">
-    <button class="btn-primary" onclick="closeModal('attachment-modal')">
-      <i class="fas fa-check"></i>
-      <span>Concluir</span>
-    </button>
-  </div>
-</div>
-
-<div id="batch-delete-modal" class="modal">
-  <div class="modal-content">
-    <button class="close-modal" onclick="closeModal('batch-delete-modal')">
-      <i class="fas fa-times"></i>
-    </button>
-    <h2 class="modal-title"><i class="fas fa-trash"></i> Confirmar Exclusão em Lote</h2>
-    <p id="batch-delete-message">Tem certeza que deseja excluir as notas selecionadas?</p>
-    <div id="batch-delete-list" style="max-height:200px;overflow-y:auto;margin:12px 0;padding:8px 12px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border);font-size:0.85rem;color:var(--text-secondary);"></div>
-    <div class="modal-buttons">
-      <button class="btn-danger" onclick="confirmBatchDelete()">
-        <i class="fas fa-trash"></i>
-        <span>Excluir</span>
-      </button>
-      <button class="btn-secondary" onclick="closeModal('batch-delete-modal')">
-        <i class="fas fa-times"></i>
-        <span>Cancelar</span>
-      </button>
-    </div>
-  </div>
-</div>
-
-<div id="notification" class="notification-modal"></div>
-
-<script src="js/script.js"></script>
+  <script type="module" src="/src/main.js"></script>
 </body>
 </html>

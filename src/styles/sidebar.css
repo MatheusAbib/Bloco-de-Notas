@@ -1,0 +1,536 @@
+#sidebar {
+  position: fixed;
+  top: 0;
+  left: -100%;
+  width: 84%;
+  max-width: 320px;
+  height: 100vh;
+  height: 100dvh;
+  background: var(--card-bg);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  transition: left var(--transition), background var(--transition);
+  z-index: 100;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.12);
+  will-change: left;
+}
+
+#sidebar.open {
+  left: 0;
+}
+
+.sidebar-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.sidebar-header > i {
+  font-size: 1.2rem;
+  color: var(--primary);
+}
+
+.sidebar-header h2 {
+  font-size: var(--font-md);
+  font-weight: 600;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.note-count {
+  background: var(--primary-bg);
+  color: var(--primary);
+  font-size: var(--font-xs);
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 20px;
+  min-width: 24px;
+  text-align: center;
+}
+
+.sidebar-actions {
+  padding: 8px 12px;
+  display: flex;
+  gap: 6px;
+  border-bottom: 1px solid var(--border);
+  background: var(--card-bg);
+  align-items: center;
+}
+
+.sidebar-actions .icon-btn {
+  width: auto;
+  height: auto;
+  min-height: var(--touch-target);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.multi-select-toggle.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.multi-select-actions {
+  display: none;
+  gap: 2px;
+  align-items: center;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.multi-select-actions.visible {
+  display: flex;
+}
+
+.multi-select-actions button {
+  background: transparent;
+  border: none;
+  width: var(--touch-target);
+  height: var(--touch-target);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.multi-select-actions .btn-danger {
+  color: #e74c3c;
+}
+
+#selected-count {
+  font-size: var(--font-xs);
+  color: var(--primary);
+  min-width: 24px;
+  text-align: center;
+  font-weight: 600;
+  background: var(--primary-bg);
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-left: 4px;
+}
+
+.sidebar-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  padding: 0 8px;
+  gap: 4px;
+  background: var(--card-bg);
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 12px 8px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: var(--font-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition);
+  border-bottom: 2px solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: var(--touch-target);
+}
+
+.tab-btn.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+.tab-btn i {
+  font-size: 0.75rem;
+}
+
+.sidebar-search {
+  padding: 10px 12px;
+  position: relative;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar-search .search-icon {
+  position: absolute;
+  left: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  pointer-events: none;
+}
+
+.sidebar-search input {
+  width: 100%;
+  padding: 10px 38px 10px 36px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-primary);
+  outline: none;
+  transition: all var(--transition);
+  min-height: var(--touch-target);
+}
+
+.sidebar-search input:focus {
+  border-color: var(--primary);
+}
+
+.search-clear {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.8rem;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition);
+}
+
+.search-clear.visible {
+  display: flex;
+}
+
+.sidebar-filters {
+  padding: 8px 12px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  flex: 1;
+  min-width: 100px;
+}
+
+.sidebar-filters select {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-primary);
+  outline: none;
+  cursor: pointer;
+  transition: all var(--transition);
+  min-height: 38px;
+}
+
+.sidebar-filters select:focus {
+  border-color: var(--primary);
+}
+
+.filter-clear {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  transition: all var(--transition);
+  font-size: 0.9rem;
+  min-width: 38px;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filter-clear.hidden {
+  display: none;
+}
+
+#note-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+  -webkit-overflow-scrolling: touch;
+}
+
+#saved-notes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.note-card {
+  background: var(--bg);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+  border-left: 3px solid var(--primary);
+  position: relative;
+  min-height: 74px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.note-card:active {
+  transform: scale(0.99);
+}
+
+.note-card h3 {
+  font-size: var(--font-sm);
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 40px;
+}
+
+.note-card p {
+  font-size: var(--font-xs);
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.note-card .tags-corner {
+  position: absolute;
+  bottom: 10px;
+  right: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+  max-width: 40%;
+  pointer-events: none;
+}
+
+.note-card .tags-corner span {
+  font-size: 0.6rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.note-card .pin-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 0.8rem;
+  z-index: 2;
+}
+
+.note-card .pin-icon.pinned {
+  transform: rotate(45deg);
+}
+
+.note-card .pin-icon:not(.pinned) {
+  color: var(--text-muted);
+}
+
+.note-card.archived-card {
+  opacity: 0.7;
+  border-left-color: var(--text-muted);
+}
+
+.note-card.archived-card h3 {
+  color: var(--text-muted);
+}
+
+.note-card-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+  opacity: 1;
+  padding-right: 60px;
+  flex-wrap: wrap;
+}
+
+.note-card-actions button {
+  background: transparent;
+  border: none;
+  padding: 0;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.note-card.active {
+  background: var(--primary-bg);
+}
+
+.note-card.pinned-card {
+  background: var(--primary-bg);
+}
+
+.note-card.selectable {
+  padding-left: 44px;
+  cursor: pointer;
+}
+
+.note-card.selected {
+  background: var(--primary-bg) !important;
+  box-shadow: 0 0 0 2px var(--primary);
+}
+
+.note-card .checkbox-overlay {
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card-bg);
+  transition: all var(--transition-fast);
+  z-index: 5;
+  font-size: 0.7rem;
+  color: transparent;
+}
+
+.note-card .checkbox-overlay.checked {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+.note-card.selectable .note-card-actions {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.empty-state {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: var(--font-sm);
+  padding: 40px 20px;
+}
+
+@media (hover: hover) {
+  .sidebar-actions .icon-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+
+  .multi-select-actions button:hover {
+    background: var(--primary-bg);
+    color: var(--primary);
+  }
+
+  .multi-select-actions .btn-danger:hover {
+    background: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
+  }
+
+  .tab-btn:hover {
+    color: var(--text-primary);
+  }
+
+  .search-clear:hover,
+  .filter-clear:hover {
+    color: var(--text-primary);
+    background: var(--bg);
+  }
+
+  .note-card:hover {
+    transform: translateX(2px);
+  }
+
+  .note-card-actions {
+    opacity: 0;
+  }
+
+  .note-card:hover .note-card-actions,
+  .note-card.active .note-card-actions {
+    opacity: 1;
+  }
+
+  .note-card-actions button:hover {
+    background: var(--primary-bg);
+    color: var(--primary);
+  }
+
+  .note-card-actions .btn-delete:hover {
+    background: rgba(231, 76, 60, 0.1);
+    color: #c0392b;
+  }
+}
+
+@media (min-width: 481px) {
+  #sidebar {
+    width: 340px;
+    max-width: none;
+  }
+}
+
+@media (min-width: 769px) {
+  #sidebar {
+    position: relative;
+    left: 0;
+    width: var(--sidebar-width);
+    min-width: var(--sidebar-width);
+    max-width: none;
+    height: 100vh;
+    height: 100dvh;
+    box-shadow: 2px 0 12px rgba(0, 0, 0, 0.03);
+    will-change: auto;
+  }
+
+  .sidebar-actions .icon-btn {
+    padding: 8px 12px;
+  }
+
+  .multi-select-actions button {
+    width: auto;
+    height: auto;
+    padding: 6px 10px;
+  }
+
+  .note-card-actions button {
+    width: 28px;
+    height: 28px;
+    font-size: 0.75rem;
+  }
+
+  .note-card-actions {
+    opacity: 0;
+  }
+
+  .note-card:hover .note-card-actions,
+  .note-card.active .note-card-actions {
+    opacity: 1;
+  }
+}
