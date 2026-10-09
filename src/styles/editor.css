@@ -259,8 +259,8 @@
   float: left;
   height: 0;
   pointer-events: none;
-  pointer-events: none;
 }
+
 #editor a {
   color: var(--primary);
   text-decoration: underline;
@@ -269,11 +269,17 @@
 
 #editor img {
   max-width: 100%;
-  max-height: 400px;
+  max-height: 600px;
   border-radius: 8px;
   margin: 8px 0;
   display: block;
   border: 1px solid var(--border);
+  height: auto;
+  object-fit: contain;
+}
+
+#editor img[width] {
+  max-width: none;
 }
 
 #editor img.ProseMirror-selectednode {
@@ -683,6 +689,85 @@
   color: #fff;
 }
 
+.emoji-popover {
+  position: fixed;
+  z-index: 100000;
+  display: none;
+  flex-direction: column;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-hover);
+  overflow: hidden;
+  width: 340px;
+  max-width: calc(100vw - 16px);
+}
+
+.emoji-popover .emoji-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.emoji-popover .emoji-tab {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  font-family: inherit;
+}
+
+.emoji-popover .emoji-tab.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+.emoji-popover .emoji-panel {
+  padding: 8px;
+}
+
+.emoji-popover emoji-picker {
+  width: 100%;
+  height: 380px;
+  --background: var(--card-bg);
+  --border-color: var(--border);
+  --input-background: var(--bg);
+  --input-color: var(--text-primary);
+  --text-color: var(--text-primary);
+}
+
+.emoji-popover .symbols-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 4px;
+  padding: 8px;
+  max-height: 380px;
+  overflow-y: auto;
+}
+
+.emoji-popover .symbol-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--text-primary);
+}
+
+.emoji-popover .symbol-btn:hover {
+  background: var(--primary-bg);
+}
+
 @media (hover: hover) {
   .toolbar-btn:hover {
     background: var(--primary-bg);
@@ -765,14 +850,18 @@
     flex: 0 0 auto;
   }
 }
+
 @media (max-width: 769px) {
-.top-bar-right, .top-bar-left{
+  .top-bar-right,
+  .top-bar-left {
     gap: 0;
-}
-.top-bar-left h1{
+  }
+
+  .top-bar-left h1 {
     font-size: 0.9rem;
+  }
 }
-}
+
 @media (min-width: 769px) {
   #editor-toolbar {
     display: flex !important;

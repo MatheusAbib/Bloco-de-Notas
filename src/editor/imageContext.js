@@ -361,11 +361,18 @@ function handleAction(action) {
 
   if (action === 'resize-small' || action === 'resize-large') {
     const factor = action === 'resize-small' ? 0.8 : 1.2
-    const naturalW = activeImage.naturalWidth
-    const current =
-      parseInt(activeImage.getAttribute('width'), 10) || naturalW
+
+    const widthAttr = parseInt(activeImage.getAttribute('width'), 10)
+    const visibleWidth = Math.round(activeImage.getBoundingClientRect().width)
+    const current = widthAttr || visibleWidth
+
     let newWidth = Math.round(current * factor)
-    newWidth = Math.max(20, Math.min(naturalW * 2, newWidth))
+
+    const minWidth = 40
+    const naturalW = activeImage.naturalWidth || 2000
+    const maxWidth = Math.min(naturalW * 2, 2000)
+    newWidth = Math.max(minWidth, Math.min(maxWidth, newWidth))
+
     replaceImageNode(pos, { width: newWidth })
     notify(
       action === 'resize-small' ? 'Imagem diminuída.' : 'Imagem aumentada.',

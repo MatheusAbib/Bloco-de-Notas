@@ -362,11 +362,12 @@ export function buildExtensions() {
     StarterKit.configure({
       heading: { levels: [1, 2, 3] },
       codeBlock: false,
-      horizontalRule: false
+      horizontalRule: false,
+      link: false,
+      underline: false
     }),
     Underline,
     Highlight.configure({ multicolor: true }),
-    TextStyle,
     Color,
     FontFamily,
     FontSize,
