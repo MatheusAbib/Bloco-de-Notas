@@ -158,6 +158,11 @@ ol {
   list-style: none;
 }
 
+#editor ul,
+#editor ol {
+  list-style: revert;
+}
+
 h1,
 h2,
 h3,
