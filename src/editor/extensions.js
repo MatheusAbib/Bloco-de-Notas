@@ -26,6 +26,24 @@ const FontSize = TextStyle.extend({
         }
       }
     }
+  },
+
+  addCommands() {
+    return {
+      setFontSize:
+        (fontSize) =>
+        ({ chain }) => {
+          if (fontSize) {
+            return chain().setMark('textStyle', { fontSize }).run()
+          }
+          return chain().setMark('textStyle', { fontSize: null }).removeEmptyTextStyle().run()
+        },
+      unsetFontSize:
+        () =>
+        ({ chain }) => {
+          return chain().setMark('textStyle', { fontSize: null }).removeEmptyTextStyle().run()
+        }
+    }
   }
 })
 

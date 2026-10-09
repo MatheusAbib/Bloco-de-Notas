@@ -92,6 +92,7 @@ export function scheduleAutoSave(editor) {
   }
   autoSaveTimer = setTimeout(async () => {
     await saveCurrentNote(editor, { silent: true })
+    updateSaveIndicator('saved', 'Salvo ✓')
   }, 600)
 }
 
